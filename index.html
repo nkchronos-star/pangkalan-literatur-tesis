@@ -1,0 +1,2318 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pangkalan Literatur Tesis</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  --paper:#F7F2E7; --paper-alt:#EFE6D2; --ink:#23201B; --ink-soft:#6B5F4F;
+  --maroon:#6E2A35; --maroon-dark:#4F1E27; --gold:#A9782F; --gold-light:#E7D3A6;
+  --line:#D8CBAA; --success:#3D6B4F; --danger:#9C3B3B; --card:#FFFDF8; --info:#2C5F7C; --info-light:#DCEAF0;
+  font-family:'IBM Plex Sans',sans-serif; background:var(--paper); color:var(--ink);
+}
+.serif{font-family:'Source Serif 4',serif}
+.mono{font-family:'IBM Plex Mono',monospace}
+.plt-root{max-width:1180px;margin:0 auto;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--paper)}
+
+/* Header */
+.p-header{background:linear-gradient(180deg,var(--maroon) 0%,var(--maroon-dark) 100%);color:#F7EFE0;padding:20px 26px 18px;position:relative}
+.p-header::after{content:'';position:absolute;left:0;right:0;bottom:-6px;height:6px;background:repeating-linear-gradient(90deg,var(--gold) 0 10px,transparent 10px 20px);opacity:.5}
+.p-eyebrow{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:#D9C9A8;margin-bottom:4px}
+.p-title{font-size:21px;font-weight:700;letter-spacing:.2px}
+.p-thesis{margin-top:12px;font-size:12.5px;line-height:1.55;color:#F1E6CE;border-left:3px solid var(--gold);padding-left:12px;max-width:920px}
+.p-ro-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.p-ro{background:rgba(247,239,224,.1);border:1px solid rgba(231,211,166,.4);color:#F1E6CE;font-size:11px;padding:3px 10px;border-radius:11px}
+.p-ro b{color:var(--gold-light)}
+
+.p-stats{display:flex;flex-wrap:wrap;background:var(--card);border-bottom:1px solid var(--line)}
+.p-stat{flex:1;min-width:100px;padding:12px 10px;text-align:center;border-right:1px solid var(--line)}
+.p-stat:last-child{border-right:none}
+.p-stat-num{font-family:'Source Serif 4',serif;font-weight:700;font-size:21px;color:var(--maroon)}
+.p-stat-label{font-size:9.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+
+/* Layout */
+.p-body{display:flex;min-height:560px}
+.p-nav{width:158px;background:var(--paper-alt);border-right:1px solid var(--line);padding:14px 0;flex-shrink:0}
+.p-tab{display:block;width:calc(100% - 14px);text-align:left;padding:9px 12px;margin:0 0 5px 0;background:var(--card);border:1px solid var(--line);border-right:none;border-radius:4px 0 0 4px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--ink-soft);cursor:pointer;letter-spacing:.2px;transition:all .15s ease}
+.p-tab:hover{color:var(--maroon)}
+.p-tab.active{background:var(--paper);color:var(--maroon);border-color:var(--maroon);transform:translateX(-4px);box-shadow:-2px 2px 0 rgba(110,42,53,.08)}
+.p-tab .n{color:var(--gold);margin-right:6px}
+
+.p-content{flex:1;padding:20px 24px;overflow-x:auto;min-width:0}
+.p-panel{display:none}
+.p-panel.active{display:block}
+h2.p-h{font-family:'Source Serif 4',serif;font-size:18px;color:var(--maroon-dark);margin:0 0 4px}
+p.p-desc{font-size:12.5px;color:var(--ink-soft);margin:0 0 16px;line-height:1.5}
+
+/* Buttons */
+.p-btn{background:var(--maroon);color:#fff;border:none;padding:8px 16px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;letter-spacing:.2px}
+.p-btn:hover{background:var(--maroon-dark)}
+.p-btn.gold{background:var(--gold)} .p-btn.gold:hover{background:#8E6423}
+.p-btn.info{background:var(--info)} .p-btn.info:hover{background:#1F485E}
+.p-btn.outline{background:transparent;color:var(--maroon);border:1px solid var(--maroon)}
+.p-btn.outline:hover{background:var(--gold-light)}
+.p-btn.small{padding:4px 10px;font-size:11px}
+.p-btn:disabled{opacity:.35;cursor:not-allowed}
+.p-btn.danger{background:var(--danger)} .p-btn.danger:hover{background:#7A2929}
+
+/* Import */
+.p-steps{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.p-step{display:flex;gap:10px;font-size:12.5px;align-items:flex-start}
+.p-step .num{width:20px;height:20px;border-radius:50%;background:var(--maroon);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.p-prompt-box{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:12px;font-family:'IBM Plex Mono',monospace;font-size:10.8px;line-height:1.6;color:var(--ink);white-space:pre-wrap;max-height:190px;overflow-y:auto;margin-bottom:8px}
+textarea.p-json{width:100%;min-height:130px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;border:1.5px dashed var(--gold);border-radius:6px;padding:12px;background:var(--card);color:var(--ink);resize:vertical}
+.p-msg{font-size:12px;margin-top:8px;padding:8px 10px;border-radius:4px;display:none}
+.p-msg.ok{background:#E6EFE8;color:var(--success);display:block}
+.p-msg.err{background:#F5E4E4;color:var(--danger);display:block}
+
+/* toolbar / inputs */
+.p-toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+input.p-search{flex:1;min-width:180px;padding:7px 10px;border:1px solid var(--line);border-radius:4px;font-size:12.5px;background:var(--card);color:var(--ink);font-family:'IBM Plex Sans',sans-serif}
+select.p-select{padding:7px 10px;border:1px solid var(--line);border-radius:4px;font-size:12px;background:var(--card);color:var(--ink);font-family:'IBM Plex Sans',sans-serif}
+
+/* database table */
+table.p-table{width:100%;border-collapse:collapse;font-size:12px;background:var(--card)}
+table.p-table th{text-align:left;background:var(--paper-alt);color:var(--ink-soft);font-weight:600;padding:8px 10px;border-bottom:2px solid var(--line);text-transform:uppercase;font-size:10px;letter-spacing:.4px;white-space:nowrap}
+table.p-table td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.p-table tr:hover td{background:var(--paper-alt);cursor:pointer}
+.p-badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;background:var(--gold-light);color:var(--maroon-dark);margin:1px 2px 1px 0;font-family:'IBM Plex Mono',monospace}
+.p-badge.bab{background:#DCE4E8;color:#2C4A56}
+.p-badge.ro{background:var(--info-light);color:var(--info)}
+.p-badge.kep-tinggi{background:#DCEEDF;color:var(--success)}
+.p-badge.kep-sederhana{background:#F3E6C8;color:#8E6423}
+.p-badge.kep-rendah{background:#F5DEDE;color:var(--danger)}
+.p-badge.kep-none{background:var(--paper-alt);color:var(--ink-soft)}
+.p-badge.tahap-wajib{background:#DCEEDF;color:var(--success)}
+.p-badge.tahap-sokongan{background:#DCE9F0;color:var(--info)}
+.p-badge.tahap-konteks{background:#F3E6C8;color:#8E6423}
+.p-badge.negara-my{background:#DCEEDF;color:var(--success);font-weight:700}
+.p-badge.negara-int{background:var(--info-light);color:var(--info);font-weight:700}
+.p-badge.q1{background:#DCEEDF;color:var(--success)}
+.p-badge.q2{background:var(--info-light);color:var(--info)}
+.p-badge.q3{background:#F3E6C8;color:#8E6423}
+.p-badge.q4{background:var(--paper-alt);color:var(--ink-soft)}
+.p-badge.qsc{background:#EAE3F5;color:#5B3E8E}
+.p-badge.qwos{background:#FAECE7;color:#993C1D}
+.p-badge.qpre{background:#F5DEDE;color:var(--danger)}
+.p-star{color:var(--gold)}
+.p-empty{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:13px}
+.p-empty .big{font-size:30px;margin-bottom:8px}
+
+/* Modal */
+.p-modal-bg{display:none;position:fixed;inset:0;background:rgba(35,32,27,.55);z-index:999;align-items:center;justify-content:center;padding:20px}
+.p-modal-bg.show{display:flex}
+.p-modal{background:var(--card);border-radius:8px;max-width:680px;width:100%;max-height:88vh;overflow-y:auto;padding:20px 22px;border:1px solid var(--line)}
+.p-modal h3{font-family:'Source Serif 4',serif;color:var(--maroon-dark);margin:0 0 10px;font-size:16px}
+.p-field{margin-bottom:10px;font-size:12.5px}
+.p-field .lbl{font-weight:600;color:var(--ink-soft);text-transform:uppercase;font-size:10px;letter-spacing:.4px;margin-bottom:2px}
+.p-field .val{color:var(--ink);line-height:1.5}
+.p-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+
+/* edit form */
+.p-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:6px}
+.p-ff{display:flex;flex-direction:column;gap:3px;font-size:12px}
+.p-ff.full{grid-column:1/-1}
+.p-ff label{font-size:10.5px;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.p-ff input,.p-ff select,.p-ff textarea{padding:6px 8px;font-size:12px;border:1px solid var(--line);border-radius:4px;background:var(--card);color:var(--ink);font-family:'IBM Plex Sans',sans-serif}
+.p-ff textarea{min-height:48px;resize:vertical}
+.p-checkbox-group{display:flex;gap:12px;flex-wrap:wrap;padding:8px 0}
+.p-checkbox-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--ink)}
+.p-checkbox-item input{width:14px;height:14px;cursor:pointer}
+.p-used-badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;margin:1px 2px 1px 0;background:#DCEEDF;color:var(--success);font-family:'IBM Plex Mono',monospace}
+.p-used-none{font-size:10.5px;color:var(--ink-soft);font-style:italic}
+.p-quote-item{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:8px 10px;margin-bottom:6px;font-size:12px;font-style:italic;line-height:1.5}
+.p-dot{display:inline-block;width:13px;height:13px;border-radius:50%;vertical-align:middle}
+.p-dot.hijau{background:#3D9650}
+.p-dot.kuning{background:#E0B23A}
+.p-dot.biru{background:#3B7DC4}
+.p-dot.merah{background:#C0392B}
+.p-badge.baca-belum{background:var(--paper-alt);color:var(--ink-soft)}
+.p-badge.baca-sedang{background:#F3E6C8;color:#8E6423}
+.p-badge.baca-selesai{background:#DCEEDF;color:var(--success)}
+.p-badge.peringkat{background:#EAE3F5;color:#5B3E8E}
+
+/* tema bars */
+.p-tema-row{margin-bottom:14px}
+.p-tema-top{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px}
+.p-tema-code{font-family:'IBM Plex Mono',monospace;color:var(--maroon);font-weight:700}
+.p-tema-bar-bg{height:10px;background:var(--paper-alt);border-radius:5px;overflow:hidden;border:1px solid var(--line)}
+.p-tema-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold) 0%,var(--maroon) 100%);border-radius:5px}
+details.p-tema-list{margin-top:4px;font-size:11.5px;color:var(--ink-soft)}
+details.p-tema-list summary{cursor:pointer;color:var(--maroon)}
+
+/* gap bank */
+.p-gap-item{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--danger);border-radius:0 6px 6px 0;padding:10px 12px;margin-bottom:8px;font-size:12.5px}
+.p-gap-src{font-size:10.5px;color:var(--ink-soft);margin-top:4px;font-family:'IBM Plex Mono',monospace}
+.p-novelty{background:#EFE9DA;border:1px solid var(--gold);border-radius:7px;padding:12px 14px;margin-bottom:14px}
+.p-novelty h3{font-family:'Source Serif 4',serif;color:var(--maroon-dark);font-size:13.5px;margin-bottom:4px}
+.p-novelty p{font-size:12px;color:var(--ink);line-height:1.55}
+.p-org-folder{min-width:140px}
+.p-org-folder .org-name{font-family:'IBM Plex Mono',monospace;font-weight:700;color:var(--info);font-size:11px;margin-bottom:3px}
+.p-org-folder ul{margin:0;padding-left:16px;font-size:11px;color:var(--ink);line-height:1.6}
+.p-priority-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 10px;background:var(--card);border:1px solid var(--line);border-radius:6px;margin-bottom:6px;font-size:12px}
+.p-priority-item.done{border-left:3px solid var(--success)}
+.p-priority-item.pending{border-left:3px solid var(--gold)}
+.p-priority-stat{font-size:11px;font-weight:700;white-space:nowrap}
+.p-priority-stat.done{color:var(--success)}
+.p-priority-stat.pending{color:#8E6423}
+
+/* rejected articles */
+.p-rejected-wrap{margin-top:12px}
+.p-rejected-head{font-size:11.5px;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.p-rejected-item{background:#F5E4E4;border:1px solid #E3C4C4;border-left:3px solid var(--danger);border-radius:0 6px 6px 0;padding:9px 12px;margin-bottom:6px;font-size:12px}
+.p-rejected-item .rt{font-weight:600;color:var(--ink)}
+.p-rejected-item .rs{font-size:11px;color:#7A2929;margin-top:3px;font-style:italic}
+
+/* apa */
+.p-apa-item{font-size:12.5px;padding:8px 0;border-bottom:1px solid var(--line);line-height:1.5}
+.p-apa-item:last-child{border-bottom:none}
+
+/* bab writer */
+.p-bw-group{margin-bottom:16px}
+.p-bw-group-head{font-family:'Source Serif 4',serif;font-size:13.5px;color:var(--maroon-dark);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.p-bw-card{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:9px 12px;margin-bottom:7px;font-size:12px}
+.p-bw-card.wajib{border-left-color:var(--success)}
+.p-bw-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:3px}
+.p-bw-title{font-weight:600;color:var(--ink);flex:1}
+.p-bw-meta{font-size:10.5px;color:var(--ink-soft);margin-bottom:4px}
+.p-bw-ayat{font-size:11.5px;font-style:italic;color:var(--ink-soft);line-height:1.5;border-top:1px dashed var(--line);padding-top:5px;margin-top:5px}
+
+/* matrix / evidence / sintesis tables */
+.p-cov-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.p-cov-card{background:var(--card);border:1px solid var(--line);border-radius:7px;padding:10px 13px;flex:1;min-width:160px}
+.p-cov-title{font-size:10px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.p-cov-item{display:flex;justify-content:space-between;font-size:12px;padding:2px 0}
+table.p-matrix{border-collapse:collapse;font-size:11px;width:100%}
+table.p-matrix th{background:var(--maroon);color:#fff;padding:6px 8px;text-align:center;border:1px solid var(--maroon-dark);font-size:10px;white-space:nowrap}
+table.p-matrix td{padding:5px 8px;border:1px solid var(--line);text-align:center;background:var(--card)}
+table.p-matrix td.left{text-align:left}
+.p-tick{color:var(--success);font-weight:700}
+.p-cross{color:#c9bfa8}
+.p-varchip-dv{font-size:10px;padding:2px 6px;border-radius:5px;background:#F5DEDE;color:var(--danger)}
+.p-varchip-iv{font-size:10px;padding:2px 6px;border-radius:5px;background:#DCE9F0;color:var(--info)}
+.p-varchip-med{font-size:10px;padding:2px 6px;border-radius:5px;background:#F3E6C8;color:#8E6423}
+.p-varchip-mod{font-size:10px;padding:2px 6px;border-radius:5px;background:#EAE3F5;color:#5B3E8E}
+.p-theochip{font-size:10px;padding:2px 6px;border-radius:5px;background:#DCEEDF;color:var(--success);margin:1px}
+
+/* citation bank */
+.p-cit-group{margin-bottom:16px}
+.p-cit-head{font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:700;color:var(--maroon);background:var(--paper-alt);padding:5px 10px;border-radius:4px;margin-bottom:6px}
+.p-cit-item{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:6px 10px;background:var(--card);border:1px solid var(--line);border-radius:5px;margin-bottom:5px;font-size:12px;line-height:1.5}
+
+.p-loading{padding:60px;text-align:center;color:var(--ink-soft);font-size:13px}
+.p-footer-actions{padding:10px 24px;border-top:1px solid var(--line);background:var(--paper-alt);display:flex;gap:8px;flex-wrap:wrap}
+.p-toast{position:fixed;bottom:16px;right:16px;max-width:320px;background:var(--maroon-dark);color:#F7EFE0;font-size:12px;line-height:1.4;padding:8px 14px;border-radius:6px;z-index:1100;opacity:0;transition:opacity .25s;pointer-events:none}
+.p-toast.show{opacity:1}
+
+/* top toolbar: analytics / backup / autosave / sync */
+.p-toolbar-top{background:var(--paper-alt);border-bottom:1px solid var(--line);padding:8px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.p-toolbar-top-btns{display:flex;gap:6px;flex-wrap:wrap}
+.p-save-ind{font-size:10.5px;color:var(--ink-soft);opacity:0;transition:opacity .3s;font-family:'IBM Plex Mono',monospace}
+.p-save-ind.show{opacity:1}
+.p-btn.teal{background:#0F6E56;color:#fff} .p-btn.teal:hover{background:#0B5744}
+
+/* sync modal */
+.p-sync-ind{flex:1;text-align:center;padding:6px;background:#0F6E56;color:#fff;font-size:11px;font-weight:700}
+.p-sync-ind:first-child{border-radius:5px 0 0 5px}
+.p-sync-ind:last-child{border-radius:0 5px 5px 0}
+.p-sync-ind.off{background:var(--line);color:var(--ink-soft)}
+.p-gas-code{background:#1E1E2E;border-radius:6px;padding:10px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#A6E3A1;margin-bottom:8px;max-height:170px;overflow-y:auto;white-space:pre}
+
+@media(max-width:720px){.p-body{flex-direction:column}.p-nav{width:100%;display:flex;overflow-x:auto;padding:8px}.p-tab{width:auto;flex-shrink:0;border-radius:4px;border-right:1px solid var(--line);margin:0 5px 0 0}.p-tab.active{transform:none}.p-form-grid{grid-template-columns:1fr}.p-toolbar-top{padding:8px 14px}}
+</style>
+</head>
+<body>
+
+<div class="plt-root" id="pltRoot">
+  <div class="p-header">
+    <div class="p-eyebrow serif">Pangkalan Literatur Tesis</div>
+    <div class="p-title serif">Import AI &middot; Database &middot; Bab Writer &middot; Matriks &middot; Bukti &middot; Sitasi &middot; Gap &middot; Sintesis &middot; APA 7</div>
+    <div class="p-thesis" id="pThesisTitle"></div>
+    <div class="p-ro-row" id="pRoRow"></div>
+  </div>
+
+  <div class="p-stats" id="pStats"></div>
+
+  <div class="p-toolbar-top">
+    <span class="p-save-ind" id="pSaveInd"></span>
+    <div class="p-toolbar-top-btns">
+      <button class="p-btn outline small" id="pAnalyticsBtn">📊 Analitik</button>
+      <button class="p-btn outline small" id="pBackupBtn">💾 Backup</button>
+      <button class="p-btn outline small" id="pAutosaveBtn">🔒 Auto-save</button>
+      <button class="p-btn teal small" id="pSyncBtn">📊 Sync Sheets</button>
+    </div>
+  </div>
+
+  <div class="p-body">
+    <div class="p-nav" id="pNav"></div>
+    <div class="p-content">
+      <div id="pLoading" class="p-loading">Memuatkan pangkalan data...</div>
+      <div id="pPanels" style="display:none">
+
+        <!-- IMPORT -->
+        <div class="p-panel active" data-panel="import">
+          <h2 class="p-h serif">Import AI</h2>
+          <p class="p-desc">Upload PDF artikel terus dalam chat Claude ini, tampal arahan di bawah bersama PDF, salin JSON yang dijana, dan tampal semula di sini. Claude akan menilai perkaitan setiap artikel dengan kajian anda dahulu — artikel yang <b>tidak berkaitan langsung</b> akan ditolak automatik dan tidak dimasukkan ke database.</p>
+          <div class="p-steps">
+            <div class="p-step"><span class="num">1</span><span>Upload PDF artikel dalam chat ini (boleh beberapa sekali gus).</span></div>
+            <div class="p-step"><span class="num">2</span><span>Salin arahan di bawah &rarr; tampal dalam chat bersama PDF.</span></div>
+            <div class="p-step"><span class="num">3</span><span>Claude akan baca PDF &amp; jana JSON &rarr; salin keseluruhan JSON tersebut.</span></div>
+            <div class="p-step"><span class="num">4</span><span>Tampal JSON di kotak bawah &rarr; klik "Import Artikel".</span></div>
+          </div>
+          <div class="p-prompt-box" id="pPromptText"></div>
+          <button class="p-btn outline small" id="pCopyPromptBtn">Salin Arahan</button>
+
+          <div style="margin-top:20px">
+            <div style="font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:6px">Tampal JSON dari Claude di sini:</div>
+            <textarea class="p-json" id="pJsonInput" placeholder='Satu artikel: { "kod": "S04-001", ... }&#10;Beberapa artikel: [ {...}, {...} ]'></textarea>
+            <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="p-btn" id="pImportBtn">Import Artikel</button>
+              <button class="p-btn outline" id="pClearJsonBtn">Kosongkan</button>
+            </div>
+            <div class="p-msg" id="pImportMsg"></div>
+            <div id="pDuplicateWrap"></div>
+            <div id="pRejectedWrap"></div>
+          </div>
+
+          <div style="margin-top:22px;font-size:12px;color:var(--ink-soft)">Atau tambah artikel secara manual:</div>
+          <button class="p-btn gold small" id="pManualAddBtn" style="margin-top:6px">+ Tambah Artikel Manual</button>
+        </div>
+
+        <!-- DATABASE -->
+        <div class="p-panel" data-panel="database">
+          <h2 class="p-h serif">Database</h2>
+          <p class="p-desc">Semua artikel yang telah diimport. Klik baris untuk lihat butiran penuh.</p>
+          <div class="p-toolbar">
+            <input class="p-search" id="pDbSearch" placeholder="Cari tajuk, penulis, atau kod...">
+            <select class="p-select" id="pDbTemaFilter"><option value="">Semua Tema</option></select>
+            <select class="p-select" id="pDbNegaraFilter">
+              <option value="">Semua Negara</option>
+              <option value="malaysia">Malaysia</option>
+              <option value="int">Antarabangsa</option>
+            </select>
+            <select class="p-select" id="pDbRoFilter"><option value="">Semua RO</option></select>
+            <select class="p-select" id="pDbKepFilter">
+              <option value="">Semua Kepentingan</option>
+              <option value="Tinggi">Tinggi</option><option value="Sederhana">Sederhana</option><option value="Rendah">Rendah</option>
+            </select>
+            <select class="p-select" id="pDbTahapFilter">
+              <option value="">Semua Tahap</option>
+              <option value="WAJIB">WAJIB</option><option value="SOKONGAN">SOKONGAN</option><option value="KONTEKS">KONTEKS</option>
+            </select>
+            <select class="p-select" id="pDbQuartileFilter">
+              <option value="">Semua Quartile</option>
+              <option value="Q1">Q1</option><option value="Q2">Q2</option><option value="Q3">Q3</option><option value="Q4">Q4</option>
+              <option value="Scopus">Scopus</option><option value="WoS">WoS</option><option value="preprint">preprint</option>
+            </select>
+            <select class="p-select" id="pDbPdfFilter">
+              <option value="">Semua PDF</option>
+              <option value="full">✅ Ada PDF (penuh)</option>
+              <option value="part">⚠ Sebahagian</option>
+              <option value="none">❌ Tiada PDF</option>
+            </select>
+            <select class="p-select" id="pDbUsedFilter">
+              <option value="">Semua Status Guna</option>
+              <option value="used">✓ Sudah digunakan</option>
+              <option value="unused">Belum digunakan</option>
+            </select>
+            <select class="p-select" id="pDbWarnaFilter">
+              <option value="">Semua Prioriti</option>
+              <option value="hijau">🟢 Sangat Penting</option>
+              <option value="kuning">🟡 Penting</option>
+              <option value="biru">🔵 Sokongan</option>
+              <option value="merah">🔴 Tidak Relevan</option>
+            </select>
+            <select class="p-select" id="pDbBacaFilter">
+              <option value="">Semua Status Bacaan</option>
+              <option value="Belum">Belum Baca</option>
+              <option value="Sedang">Sedang Baca</option>
+              <option value="Selesai">Selesai Baca</option>
+            </select>
+            <select class="p-select" id="pDbPeringkatFilter">
+              <option value="">Semua Peringkat</option>
+              <option value="Sekolah Rendah">Sekolah Rendah</option>
+              <option value="Sekolah Menengah">Sekolah Menengah</option>
+              <option value="Pra-Universiti">Pra-Universiti</option>
+              <option value="IPT">IPT</option>
+              <option value="Umum">Umum</option>
+            </select>
+          </div>
+          <div id="pDbTableWrap"></div>
+        </div>
+
+        <!-- BAB WRITER -->
+        <div class="p-panel" data-panel="babwriter">
+          <h2 class="p-h serif">Bab Writer</h2>
+          <p class="p-desc">Pilih subtopik untuk lihat semua artikel relevan, tersusun ikut keutamaan &mdash; guna semasa menulis Bab 2 (Sorotan Literatur).</p>
+          <div class="p-toolbar">
+            <select class="p-select" id="pBwTema" style="flex:1;min-width:220px"><option value="">Pilih subtopik...</option></select>
+            <select class="p-select" id="pBwSort">
+              <option value="tahap">Ikut keutamaan (WAJIB dahulu)</option>
+              <option value="tahun">Terbaru dahulu</option>
+              <option value="negara">Malaysia dahulu</option>
+              <option value="priority">Keutamaan bacaan</option>
+            </select>
+          </div>
+          <div id="pBwWrap"></div>
+        </div>
+
+        <!-- THESIS MATRIX -->
+        <div class="p-panel" data-panel="matrix">
+          <h2 class="p-h serif">Matriks Tesis</h2>
+          <p class="p-desc">Liputan literatur mengikut Objektif Kajian (RO), Bab, dan Quartile &mdash; kenal pasti jurang liputan sebelum menulis.</p>
+          <div class="p-cov-row" id="pCovWrap"></div>
+          <div style="overflow-x:auto"><table class="p-matrix" id="pMatrixTable"></table></div>
+        </div>
+
+        <!-- EVIDENCE MAP -->
+        <div class="p-panel" data-panel="evidence">
+          <h2 class="p-h serif">Peta Bukti</h2>
+          <p class="p-desc">Pemboleh ubah (DV/IV/Mediator/Moderator) dan teori asas setiap artikel &mdash; bantu bina Kerangka Konseptual (Bab 2.3).</p>
+          <div style="overflow-x:auto"><table class="p-matrix" id="pEvidenceTable"></table></div>
+        </div>
+
+        <!-- CITATION BANK -->
+        <div class="p-panel" data-panel="citation">
+          <h2 class="p-h serif">Bank Sitasi</h2>
+          <p class="p-desc">Ayat akademik siap guna, dikumpul ikut kategori pilihan anda &mdash; klik salin untuk terus tampal dalam tesis.</p>
+          <div class="p-toolbar">
+            <input class="p-search" id="pCitSearch" placeholder="Cari topik atau teori...">
+            <select class="p-select" id="pCitMode"><option value="topik">Ikut Topik</option><option value="teori">Ikut Teori</option><option value="var">Ikut Pemboleh Ubah</option></select>
+          </div>
+          <div id="pCitWrap"></div>
+        </div>
+
+        <!-- GAP BANK -->
+        <div class="p-panel" data-panel="gap">
+          <h2 class="p-h serif">Gap Bank</h2>
+          <p class="p-desc">Kumpulan jurang kajian (research gap) dari semua artikel yang diimport.</p>
+          <div class="p-novelty" id="pNoveltyBox"></div>
+          <input class="p-search" id="pGapSearch" placeholder="Cari dalam gap..." style="margin-bottom:12px">
+          <div id="pGapWrap"></div>
+        </div>
+
+        <!-- TEMA -->
+        <div class="p-panel" data-panel="tema">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+            <div>
+              <h2 class="p-h serif">Tema</h2>
+              <p class="p-desc">Pecahan artikel mengikut tema/subtopik kajian.</p>
+            </div>
+            <button class="p-btn outline small" id="pTemaMgrBtn" style="white-space:nowrap">&#9881; Urus Tema</button>
+          </div>
+          <div class="p-novelty" id="pTema00Note" style="border-color:var(--info);background:var(--info-light)">
+            <h3 class="serif" style="color:var(--info)">S00 — Dasar Pendidikan &amp; Polisi</h3>
+            <p></p>
+            <div id="pTema00Folders" style="margin-top:10px;display:flex;gap:14px;flex-wrap:wrap"></div>
+            <div id="pTema00BabList" style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap"></div>
+          </div>
+          <div class="p-novelty" id="pTema00Priority" style="border-color:var(--gold)">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+              <h3 class="serif">Dokumen Dasar AI Diutamakan</h3>
+              <button class="p-btn outline small" id="pPriorityManageBtn" style="white-space:nowrap">&#9881; Urus Senarai</button>
+            </div>
+            <p style="margin-bottom:8px">Senarai dokumen dasar yang paling penting untuk Bab 1 &amp; Bab 2 — asas konsep &amp; panduan antarabangsa AI dalam pendidikan. Tambah/buang ikut keperluan anda, tiada had.</p>
+            <div id="pTema00PriorityList"></div>
+          </div>
+          <div id="pTemaWrap"></div>
+        </div>
+
+        <!-- SINTESIS -->
+        <div class="p-panel" data-panel="sintesis">
+          <h2 class="p-h serif">Sintesis Auto</h2>
+          <p class="p-desc">Dua jadual tesis dijana automatik dari database anda: Jadual Perbandingan Kajian dan Jadual Sintesis Tema.</p>
+          <div class="p-toolbar">
+            <select class="p-select" id="pSynType">
+              <option value="compare">Jadual Perbandingan Kajian</option>
+              <option value="synthesis">Jadual Sintesis Tema</option>
+            </select>
+            <button class="p-btn info small" id="pSynCopyBtn">Salin HTML Jadual</button>
+          </div>
+          <div id="pSynWrap" style="overflow-x:auto"></div>
+        </div>
+
+        <!-- APA -->
+        <div class="p-panel" data-panel="apa">
+          <h2 class="p-h serif">APA 7</h2>
+          <p class="p-desc">Senarai sitasi format APA 7th, siap untuk disalin ke Rujukan/Bibliografi.</p>
+          <button class="p-btn gold small" id="pCopyApaBtn" style="margin-bottom:12px">Salin Semua Sitasi</button>
+          <div id="pApaWrap"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="p-footer-actions">
+    <button class="p-btn outline small" id="pExportBtn">Eksport Backup (JSON)</button>
+    <button class="p-btn outline small" id="pImportBackupBtn">Import Backup (JSON)</button>
+    <input type="file" id="pImportBackupFile" accept=".json" style="display:none">
+    <button class="p-btn danger small" id="pClearAllBtn">Padam Semua Data</button>
+  </div>
+</div>
+
+<div class="p-modal-bg" id="pModalBg"><div class="p-modal" id="pModalContent"></div></div>
+<div class="p-modal-bg" id="pEditBg"><div class="p-modal" id="pEditContent"></div></div>
+
+<!-- CUSTOM CONFIRM MODAL (native confirm() is blocked inside sandboxed artifact iframes) -->
+<div class="p-modal-bg" id="pConfirmBg">
+  <div class="p-modal" style="max-width:380px">
+    <h3 class="serif">Sahkan Tindakan</h3>
+    <p style="font-size:12.5px;color:var(--ink);line-height:1.5" id="pConfirmMsg"></p>
+    <div class="p-modal-actions">
+      <button class="p-btn outline" id="pConfirmNo">Batal</button>
+      <button class="p-btn danger" id="pConfirmYes">Ya, Teruskan</button>
+    </div>
+  </div>
+</div>
+
+<!-- TARGET/BENCHMARK EDITOR MODAL -->
+<div class="p-modal-bg" id="pTargetBg"><div class="p-modal" id="pTargetContent" style="max-width:380px"></div></div>
+
+<!-- ANALYTICS MODAL -->
+<div class="p-modal-bg" id="pAnalyticsBg"><div class="p-modal" id="pAnalyticsContent" style="max-width:740px"></div></div>
+
+<!-- RO MANAGER MODAL -->
+<div class="p-modal-bg" id="pRoBg"><div class="p-modal" id="pRoContent" style="max-width:520px"></div></div>
+
+<!-- PRIORITY S00 DOCS MANAGER MODAL -->
+<div class="p-modal-bg" id="pPriorityBg"><div class="p-modal" id="pPriorityContent" style="max-width:640px"></div></div>
+
+<!-- TEMA MANAGER MODAL -->
+<div class="p-modal-bg" id="pTemaMgrBg"><div class="p-modal" id="pTemaMgrContent" style="max-width:560px"></div></div>
+
+<!-- AUTOSAVE INFO MODAL -->
+<div class="p-modal-bg" id="pAutosaveBg"><div class="p-modal" id="pAutosaveContent" style="max-width:440px"></div></div>
+
+<!-- SYNC GOOGLE SHEETS MODAL -->
+<div class="p-modal-bg" id="pSyncBg">
+  <div class="p-modal" id="pSyncModalInner" style="max-width:580px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h3 class="serif" style="margin:0;color:#0F6E56">Sync ke Google Sheets</h3>
+      <button class="p-btn outline small" id="pSyncCloseX">Tutup</button>
+    </div>
+    <div style="background:#E1F5EE;border-radius:7px;padding:10px 13px;margin-bottom:12px;font-size:11.5px;color:#0F6E56">
+      Sistem hantar data artikel terus ke Google Sheets anda melalui Google Apps Script (percuma, tiada API key diperlukan).
+    </div>
+    <div style="display:flex;gap:0;margin-bottom:12px">
+      <div id="pSyncInd1" class="p-sync-ind">1. Setup</div>
+      <div id="pSyncInd2" class="p-sync-ind off">2. URL</div>
+      <div id="pSyncInd3" class="p-sync-ind off">3. Sync!</div>
+    </div>
+
+    <div id="pSyncStep1">
+      <div style="font-size:12px;font-weight:700;color:var(--maroon-dark);margin-bottom:8px">Langkah 1 — Setup Google Apps Script</div>
+      <div style="font-size:11.5px;color:var(--ink);line-height:1.8;margin-bottom:8px">
+        <b>1.</b> Buka <a href="https://sheets.google.com" target="_blank" style="color:#0F6E56">sheets.google.com</a> &rarr; cipta spreadsheet baharu<br>
+        <b>2.</b> Namakan: <code>Pangkalan Literatur Tesis</code><br>
+        <b>3.</b> Klik <b>Extensions</b> &rarr; <b>Apps Script</b><br>
+        <b>4.</b> Padam semua teks sedia ada dalam editor<br>
+        <b>5.</b> Salin kod di bawah &rarr; tampal &rarr; klik <b>Save</b><br>
+        <b>6.</b> Klik <b>Deploy</b> &rarr; <b>New deployment</b><br>
+        <b>7.</b> Type: <b>Web app</b> &rarr; Execute as: <b>Me</b> &rarr; Who has access: <b>Anyone</b><br>
+        <b>8.</b> Klik <b>Deploy</b> &rarr; <b>Authorize access</b> &rarr; salin URL yang dijana
+      </div>
+      <div class="p-gas-code" id="pGasCode"></div>
+      <button class="p-btn small" style="background:#1E1E2E;color:#A6E3A1" id="pCopyGasBtn">Salin Kod Apps Script</button>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px"><button class="p-btn gold small" id="pSyncNext1">Seterusnya &rarr;</button></div>
+    </div>
+
+    <div id="pSyncStep2" style="display:none">
+      <div style="font-size:12px;font-weight:700;color:var(--maroon-dark);margin-bottom:8px">Langkah 2 — Tampal URL Web App</div>
+      <div style="font-size:11.5px;color:var(--ink-soft);margin-bottom:8px;line-height:1.6">Selepas Deploy, Google akan beri URL seperti:<br><code style="background:var(--paper-alt);padding:2px 6px;border-radius:3px;font-size:10px">https://script.google.com/macros/s/AKfycbx.../exec</code></div>
+      <div class="p-ff" style="margin-bottom:10px">
+        <label style="color:#0F6E56">Tampal URL di sini:</label>
+        <input id="pGasUrlInput" placeholder="https://script.google.com/macros/s/xxxxx/exec" style="border:2px solid #0F6E56">
+      </div>
+      <div style="background:var(--gold-light);border-radius:6px;padding:8px 10px;font-size:10.5px;color:#5C4419;margin-bottom:10px">URL ini disimpan dalam storan peribadi perbualan ini sahaja &mdash; tidak dikongsi.</div>
+      <div style="display:flex;justify-content:space-between">
+        <button class="p-btn outline small" id="pSyncBack2">&larr; Balik</button>
+        <button class="p-btn gold small" id="pSyncSaveUrl">Simpan URL &rarr;</button>
+      </div>
+    </div>
+
+    <div id="pSyncStep3" style="display:none">
+      <div style="font-size:12px;font-weight:700;color:#0F6E56;margin-bottom:8px">&#10003; Bersedia untuk Sync!</div>
+      <div style="background:#E1F5EE;border-radius:6px;padding:9px 12px;margin-bottom:10px;font-size:11px">
+        <b>URL tersimpan:</b><br><span id="pGasUrlDisplay" style="font-size:10px;color:var(--ink-soft);word-break:break-all"></span>
+      </div>
+      <div id="pSyncStatus" style="margin-bottom:10px;font-size:11.5px;color:var(--ink-soft)">Sedia untuk sync...</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="p-btn outline small" id="pSyncBack3">&larr; Tukar URL</button>
+        <button class="p-btn outline small" id="pSyncTest">Uji Sambungan</button>
+        <button class="p-btn teal small" id="pSyncNow">Hantar ke Sheets</button>
+        <button class="p-btn gold small" id="pSyncPull">&#8681; Muat Turun dari Sheets</button>
+      </div>
+      <div style="margin-top:10px;font-size:10.5px;color:var(--ink-soft)">Tip: sync setiap kali selesai tambah artikel baharu. Kalau paparan app kosong (cth selepas buka semula di Google Sites), klik "Muat Turun dari Sheets" untuk pulihkan data.</div>
+    </div>
+  </div>
+</div>
+
+<div class="p-toast" id="pToast"></div>
+
+<script>
+(function(){
+  // Fallback storage: use window.storage when running inside Claude.ai artifacts;
+  // otherwise (e.g. embedded in Google Sites or any other webpage) fall back to
+  // the browser's localStorage so the exact same file works everywhere.
+  if (!window.storage) {
+    window.storage = {
+      get: async (key, shared) => {
+        const raw = localStorage.getItem((shared ? "shared:" : "priv:") + key);
+        if (raw === null) throw new Error("Key not found: " + key);
+        return { key, value: raw, shared: !!shared };
+      },
+      set: async (key, value, shared) => {
+        localStorage.setItem((shared ? "shared:" : "priv:") + key, value);
+        return { key, value, shared: !!shared };
+      },
+      delete: async (key, shared) => {
+        localStorage.removeItem((shared ? "shared:" : "priv:") + key);
+        return { key, deleted: true, shared: !!shared };
+      },
+      list: async (prefix, shared) => {
+        const p = (shared ? "shared:" : "priv:") + (prefix || "");
+        const keys = Object.keys(localStorage).filter(k => k.startsWith(p)).map(k => k.slice((shared ? "shared:" : "priv:").length));
+        return { keys, prefix, shared: !!shared };
+      }
+    };
+  }
+
+  const THESIS = "KESAN PENGGUNAAN LAMAN WEB BERINTEGRASI KECERDASAN BUATAN (AI) TERHADAP PENCAPAIAN, MOTIVASI DAN PENGLIBATAN MURID BERPRESTASI RENDAH DALAM MATA PELAJARAN SEJARAH SEKOLAH MENENGAH";
+  let TARGET = 150;
+  const TARGET_KEY = "plt_target";
+  let ROS = [
+    {k:"RO1", n:"Membangunkan laman web berintegrasi AI bagi pembelajaran Sejarah"},
+    {k:"RO2", n:"Kesan terhadap pencapaian murid berprestasi rendah"},
+    {k:"RO3", n:"Kesan terhadap motivasi murid berprestasi rendah"},
+    {k:"RO4", n:"Kesan terhadap penglibatan murid berprestasi rendah"}
+  ];
+  const ROS_KEY = "plt_ros";
+  let TEMA_MAP = {
+    S00: "Dasar Pendidikan & Polisi",
+    S01: "Transformasi Pendidikan Digital", S02: "Pendidikan Sejarah", S03: "Murid Berprestasi Rendah",
+    S04: "AI dalam Pendidikan", S05: "Laman Web Pembelajaran", S06: "Teknologi Pendidikan",
+    S07: "Pembelajaran Berasaskan Web", S08: "Artificial Intelligence", S09: "Generative AI",
+    S10: "RAG (Retrieval-Augmented Generation)", S11: "AI Tutor", S12: "Adaptive Learning",
+    S13: "Scaffolding", S14: "Video Pembelajaran", S15: "Teori & Kerangka Konseptual",
+    S16: "Pencapaian", S17: "Motivasi", S18: "Penglibatan", S19: "Metodologi (Eksperimen/Instrumen/Statistik)"
+  };
+  const TEMA_KEY = "plt_tema";
+  const TEMA_00_NOTE = {
+    guna: "Tema 00 untuk dokumen dasar/polisi rasmi sahaja — meliputi DUA peringkat: (1) Antarabangsa: UNESCO (Guidance for Generative AI, AI Competency Framework for Teachers/Students, Recommendation on the Ethics of AI) dan OECD (Digital Education Outlook), sebagai asas konsep & panduan global tentang AI dalam pendidikan; (2) Malaysia: PPPM 2013–2025, Laporan Tahunan PPPM, Pelan/Dasar Pendidikan Digital KPM, DSKP Sejarah, Buku Teks KSSM, Standard Pentaksiran, Laporan SPM, dan dokumen KPM lain yang berkaitan. Guna sebagai rujukan latar belakang dan hala tuju dasar — BUKAN sebagai bukti empirikal kajian.",
+    bab: [
+      {b:"Bab 1", items:["Latar belakang kajian","Isu pendidikan digital","Keperluan transformasi pendidikan","Justifikasi kajian"]},
+      {b:"Bab 2", items:["Dasar pendidikan negara & antarabangsa","Transformasi pendidikan","Sokongan terhadap penggunaan teknologi dalam PdP"]},
+      {b:"Bab 5", items:["Implikasi kepada KPM","Cadangan kepada sekolah","Cadangan kepada guru"]}
+    ],
+    folders: [
+      {org:"UNESCO", items:["Guidance for Generative AI","AI Competency Framework for Teachers","AI Competency Framework for Students","Ethics of AI"]},
+      {org:"OECD", items:["Digital Education Outlook"]},
+      {org:"KPM", items:["Dasar/Pelan Pendidikan Digital"]},
+      {org:"PPPM", items:["PPPM 2013–2025 & Laporan Tahunan"]},
+      {org:"DSKP", items:["DSKP Sejarah"]}
+    ]
+  };
+  let PRIORITY_S00_DOCS = [
+    {org:"UNESCO", tajuk:"Guidance for Generative AI in Education and Research", tahun:"2023", kw:"generative ai in education and research"},
+    {org:"UNESCO", tajuk:"Recommendation on the Ethics of Artificial Intelligence", tahun:"2021", kw:"ethics of artificial intelligence"},
+    {org:"UNESCO", tajuk:"AI Competency Framework for Teachers", tahun:"2024", kw:"competency framework for teachers"},
+    {org:"UNESCO", tajuk:"AI Competency Framework for Students", tahun:"2024", kw:"competency framework for students"},
+    {org:"OECD", tajuk:"Digital Education Outlook", tahun:"2023", kw:"digital education outlook"}
+  ];
+  const PRIORITY_DOCS_KEY = "plt_priority_docs";
+  const BAB_LIST = ["Bab 1", "Bab 2", "Bab 3", "Bab 4", "Bab 5"];
+  const KEPENTINGAN_LEVELS = ["Tinggi", "Sederhana", "Rendah"];
+  const STORAGE_KEY = "plt_articles";
+  const TABS = [
+    {id:"import", n:"01", label:"Import AI"},
+    {id:"database", n:"02", label:"Database"},
+    {id:"babwriter", n:"03", label:"Bab Writer"},
+    {id:"matrix", n:"04", label:"Matriks Tesis"},
+    {id:"evidence", n:"05", label:"Peta Bukti"},
+    {id:"citation", n:"06", label:"Bank Sitasi"},
+    {id:"gap", n:"07", label:"Gap Bank"},
+    {id:"tema", n:"08", label:"Tema"},
+    {id:"sintesis", n:"09", label:"Sintesis"},
+    {id:"apa", n:"10", label:"APA 7"}
+  ];
+
+  function buildPromptText(){
+    const roDesc = ROS.map(r => `${r.k}=${r.n}`).join(", ");
+    const otherTopics = Object.keys(TEMA_MAP).filter(c => c !== "S00").map(c => `${c}=${TEMA_MAP[c]}`).join(", ");
+    return `Sebelum menjana sebarang data, NILAI DAHULU sama ada artikel/dokumen PDF ini BENAR-BENAR BERKAITAN dengan kajian saya bertajuk "Kesan Penggunaan Laman Web Berintegrasi Kecerdasan Buatan (AI) terhadap Pencapaian, Motivasi dan Penglibatan Murid Berprestasi Rendah dalam Mata Pelajaran Sejarah Sekolah Menengah". Dokumen dianggap BERKAITAN jika ia (a) laman web/aplikasi/platform pembelajaran berasaskan AI atau teknologi digital dalam pendidikan, (b) pengajaran/pembelajaran mata pelajaran Sejarah, (c) murid berprestasi rendah/lemah akademik, (d) pencapaian, motivasi atau penglibatan pelajar dalam pembelajaran, (e) teori/metodologi relevan (cth reka bentuk eksperimen kuasi, instrumen motivasi/penglibatan, model pembelajaran adaptif/AI dalam pendidikan), ATAU (f) dokumen dasar/polisi rasmi peringkat ANTARABANGSA atau MALAYSIA berkaitan AI dalam pendidikan — cth UNESCO (Guidance for Generative AI in Education and Research, Recommendation on the Ethics of Artificial Intelligence, AI Competency Framework for Teachers/Students), OECD (Digital Education Outlook), atau dokumen KPM (PPPM 2013–2025, Laporan Tahunan PPPM, Pelan/Dasar Pendidikan Digital KPM, DSKP Sejarah, Buku Teks KSSM, Standard Pentaksiran, Laporan SPM) — yang menyokong latar belakang/justifikasi kajian. Dokumen yang langsung TIDAK berkaitan dengan mana-mana perkara di atas MESTI DITOLAK.
+
+JIKA TIDAK BERKAITAN: jangan jana rekod penuh. Balas HANYA dengan JSON ini sahaja: {"tolak": true, "kod": "(kod ringkas jika ada)", "tajuk": "(tajuk penuh)", "penulis": "(penulis jika ada)", "sebab": "(jelaskan ringkas dalam 1 ayat kenapa tidak berkaitan)"}.
+
+JIKA BERKAITAN: teruskan jana JSON penuh. Ini SATU database bersepadu untuk keseluruhan tesis. Objektif Kajian: ${roDesc}. Subtopik: S00=${TEMA_MAP.S00 || "Dasar Pendidikan & Polisi"} (dokumen dasar/polisi rasmi sahaja, DUA peringkat — Antarabangsa: UNESCO/OECD, dan Malaysia: KPM/PPPM/DSKP — guna topik INI, bukan artikel jurnal empirikal; untuk dokumen organisasi seperti UNESCO/OECD/KPM, letak nama organisasi pada medan "penulis" cth "UNESCO" atau "OECD"; babDisokong lazimnya Bab 1/Bab 2/Bab 5, tahapKepentingan Tinggi untuk dokumen rangka kerja/panduan utama (cth UNESCO AI Competency Framework, Guidance for Generative AI) dan Sederhana untuk dokumen sokongan konteks am, dv/iv/mediator/moderator boleh dibiarkan kosong), ${otherTopics}. Jana JSON dengan SEMUA medan ini: tolak (false), kod (cth S04-001 atau S00-001), kategori (Artikel Jurnal/Tesis/Prosiding/Laporan/Buku/Dasar/Dokumen Rasmi/Lain-lain), penulis, tahun, tajuk, jurnal, vol, doi, urlRasmi (URL/pautan rasmi artikel jika ada, cth pautan DOI penuh atau laman penerbit — bukan link storan peribadi), negara, peringkatPendidikan (Sekolah Rendah/Sekolah Menengah/Pra-Universiti/IPT/Umum — peringkat pendidikan konteks kajian artikel tersebut, bukan konteks kajian saya), jenis (cth Eksperimen Kuasi, Kajian Kuantitatif, Dasar/Polisi, Rangka Kerja/Panduan Antarabangsa, Statistik/Laporan Rasmi), rekaBentukKajian (Kuantitatif/Kualitatif/Mixed Method — kosongkan jika S00), quartile (Q1/Q2/Q3/Q4/Scopus/WoS/preprint/tiada), kataKunci (array kata kunci/keywords artikel), pdf (full/part/none), gdrive (biarkan kosong string), impakFaktor, sampel, obj, persoalanKajian (array persoalan kajian jika dinyatakan penulis, kosongkan jika tiada), kaedah, instrumen, kaedahAnalisis, teori (array teori asas artikel, kosongkan jika S00), dv, iv, mediator, moderator (kosongkan jika S00), dapatan (array dapatan/hala tuju/statistik/cadangan utama), kelemahanKajian (array limitasi/kelemahan yang dinyatakan penulis, kosongkan jika S00), cadanganKajian (array cadangan kajian akan datang/future research yang disyorkan penulis, kosongkan jika S00), novelty (1-2 ayat ringkas menjelaskan apa yang baharu/signifikan tentang kajian ini berbanding kajian lain, kosongkan jika S00), gap (array research gap atau cabaran pelaksanaan jika S00), kaitan (kaitan dengan kajian ini), ayat (satu ayat BM akademik siap guna tesis), petikan (array 1-3 petikan/idea utama PENDEK untuk rujukan penulis — setiap satu MESTI ringkas, bukan salinan panjang perenggan asal, dan jika memetik terus hadkan kepada frasa pendek sahaja demi mematuhi hak cipta; jika ragu-ragu, parafrasa idea dalam ayat sendiri berbanding petik terus), digunakanDalam (biarkan array kosong [] — ini ditanda MANUAL oleh pelajar semasa menulis tesis, bukan oleh AI), topik (array kod subtopik berkaitan, WAJIB sekurang-kurangnya SATU kod S00-S19, cth ["S04","S17"]), babDisokong (array bab tesis yang disokong, cth ["Bab 1","Bab 2"]), ro (array RO berkaitan dari senarai berikut: ${ROS.map(r=>r.k).join(", ")} — boleh kosong jika S00), tahapKepentingan (Tinggi/Sederhana/Rendah), tahapArtikel (WAJIB/SOKONGAN/KONTEKS), prioritiWarna (hijau=sangat penting/wajib sitasi, kuning=penting, biru=sokongan, merah=tidak relevan — nilaikan berdasarkan kekuatan kaitan dengan kajian saya), statusBacaan (biarkan sebagai "Belum" — ini ditanda MANUAL oleh pelajar), priority (1-5), nota. Jika beberapa dokumen diberikan sekali gus, nilai SETIAP SATU berasingan dan pulangkan semua dalam SATU array JSON. Keluarkan JSON sahaja, tiada teks lain.`;
+  }
+
+  let articles = [];
+  let activeTab = "import";
+  let dbFilter = { search: "", tema: "", ro: "", kepentingan: "", tahap: "", pdf: "", negara: "", quartile: "", used: "", warna: "", baca: "", peringkat: "" };
+  const PDF_ICON = { full: "&#9989;", part: "&#9888;", none: "&#10060;" };
+  const PDF_LABEL = { full: "PDF Penuh", part: "PDF Sebahagian", none: "Tiada PDF" };
+  let gapFilter = "";
+  let citFilter = "";
+  let editingKod = null;
+  let lastSavedAt = null;
+  let gasUrl = "";
+  const GAS_URL_KEY = "plt_gas_url";
+  const GAS_CODE = `function doPost(e) {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var data = JSON.parse(e.postData.contents);
+    var articles = data.articles || [];
+
+    var sheet = ss.getSheetByName("Database") || ss.insertSheet("Database");
+    sheet.clearContents();
+
+    var headers = ["Kod","Kategori","Topik","RO","Bab Disokong","Penulis","Tahun","Tajuk","Jurnal","Vol","DOI","URL Rasmi",
+      "Negara","Peringkat Pendidikan","Jenis","Reka Bentuk Kajian","Quartile","Kata Kunci","Tahap Artikel","Tahap Kepentingan",
+      "Prioriti Warna","Status Bacaan","PDF","Link PDF","Sampel","Persoalan Kajian",
+      "Dapatan","Kelemahan Kajian","Cadangan Kajian","Kebaharuan","Gap","Kaitan Dengan Kajian","Ayat Tesis","Petikan Penting","Digunakan Dalam","Nota","RawJSON"];
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    sheet.getRange(1, 1, 1, headers.length).setBackground("#6E2A35").setFontColor("#FFFFFF").setFontWeight("bold");
+
+    if (articles.length > 0) {
+      var rows = articles.map(function(a) {
+        return [
+          a.kod||"", a.kategori||"", (a.topik||[]).join(" | "), (a.ro||[]).join(" | "), (a.babDisokong||[]).join(" | "),
+          a.penulis||"", a.tahun||"", a.tajuk||"", a.jurnal||"", a.vol||"", a.doi||"", a.urlRasmi||"",
+          a.negara||"", a.peringkatPendidikan||"", a.jenis||"", a.rekaBentukKajian||"", a.quartile||"", (a.kataKunci||[]).join(" | "),
+          a.tahapArtikel||"", a.tahapKepentingan||"", a.prioritiWarna||"", a.statusBacaan||"Belum",
+          a.pdf||"", a.gdrive||"", a.sampel||"", (a.persoalanKajian||[]).join(" | "),
+          (a.dapatan||[]).join(" | "), (a.kelemahanKajian||[]).join(" | "), (a.cadanganKajian||[]).join(" | "), a.novelty||"",
+          (a.gap||[]).join(" | "), a.kaitan||"", a.ayat||"", (a.petikan||[]).join(" | "), (a.digunakanDalam||[]).join(" | "), a.nota||"",
+          JSON.stringify(a)
+        ];
+      });
+      sheet.getRange(2, 1, rows.length, headers.length).setValues(rows);
+      sheet.autoResizeColumns(1, headers.length - 1);
+      sheet.hideColumns(headers.length);
+    }
+
+    var sum = ss.getSheetByName("Ringkasan") || ss.insertSheet("Ringkasan");
+    sum.clearContents();
+    sum.getRange("A1").setValue("Pangkalan Literatur Tesis - Ringkasan");
+    sum.getRange("A1").setFontSize(14).setFontWeight("bold").setFontColor("#6E2A35");
+    sum.getRange("A2").setValue("Dikemas kini: " + new Date().toLocaleString());
+    sum.getRange("A4").setValue("Jumlah Artikel").setFontWeight("bold");
+    sum.getRange("B4").setValue(articles.length);
+    var myCount = articles.filter(function(a){return (a.negara||"").indexOf("Malaysia")>=0;}).length;
+    sum.getRange("A5").setValue("Artikel Malaysia").setFontWeight("bold");
+    sum.getRange("B5").setValue(myCount);
+    sum.autoResizeColumns(1, 2);
+
+    return ContentService.createTextOutput(JSON.stringify({
+      success: true,
+      message: articles.length + " artikel berjaya disimpan ke Google Sheets!",
+      timestamp: new Date().toISOString()
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      message: "Ralat: " + err.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName("Database");
+    var articles = [];
+    if (sheet) {
+      var lastRow = sheet.getLastRow();
+      var lastCol = sheet.getLastColumn();
+      if (lastRow > 1) {
+        var raw = sheet.getRange(2, lastCol, lastRow - 1, 1).getValues();
+        raw.forEach(function(r) {
+          if (r[0]) {
+            try { articles.push(JSON.parse(r[0])); } catch(parseErr) {}
+          }
+        });
+      }
+    }
+    return ContentService.createTextOutput(JSON.stringify({
+      success: true,
+      status: "Pangkalan Literatur Tesis sync aktif",
+      timestamp: new Date().toISOString(),
+      articles: articles
+    })).setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      message: "Ralat: " + err.toString(),
+      articles: []
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}`;
+
+  const $ = (sel, root) => (root||document).querySelector(sel);
+  const $$ = (sel, root) => Array.from((root||document).querySelectorAll(sel));
+
+  function escapeHtml(s){
+    if (s === null || s === undefined) return "";
+    return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+  function asArray(v){
+    if (Array.isArray(v)) return v;
+    if (typeof v === "string" && v.trim()) return v.split(/[|,]/).map(s=>s.trim()).filter(Boolean);
+    return [];
+  }
+  function kepentinganBadge(level){
+    if (!level) return '<span class="p-badge kep-none">-</span>';
+    const cls = level === "Tinggi" ? "kep-tinggi" : level === "Sederhana" ? "kep-sederhana" : "kep-rendah";
+    return `<span class="p-badge ${cls}">${escapeHtml(level)}</span>`;
+  }
+  function tahapBadge(t){
+    if (!t) return "";
+    const cls = t === "WAJIB" ? "tahap-wajib" : t === "SOKONGAN" ? "tahap-sokongan" : "tahap-konteks";
+    return `<span class="p-badge ${cls}">${escapeHtml(t)}</span>`;
+  }
+  function isMalaysia(negara){ return (negara||"").toLowerCase().includes("malaysia"); }
+  function negaraBadge(negara){
+    if (!negara) return '<span class="p-badge kep-none">-</span>';
+    return isMalaysia(negara)
+      ? `<span class="p-badge negara-my">MY</span>`
+      : `<span class="p-badge negara-int" title="${escapeHtml(negara)}">INT</span>`;
+  }
+  function quartileBadge(q){
+    if (!q || q === "tiada") return '<span class="p-badge kep-none">-</span>';
+    const clsMap = {Q1:"q1", Q2:"q2", Q3:"q3", Q4:"q4", Scopus:"qsc", WoS:"qwos", preprint:"qpre"};
+    const cls = clsMap[q] || "";
+    return `<span class="p-badge ${cls}">${escapeHtml(q)}</span>`;
+  }
+  const WARNA_LABEL = { hijau: "Sangat Penting (wajib sitasi)", kuning: "Penting", biru: "Sokongan", merah: "Tidak Relevan" };
+  const DIGUNAKAN_OPTIONS = ["Bab 1","Bab 2","Bab 3","Bab 5","SLR","Artikel Jurnal"];
+  function bacaBadge(status){
+    const s = status || "Belum";
+    const cls = s === "Selesai" ? "baca-selesai" : s === "Sedang" ? "baca-sedang" : "baca-belum";
+    return `<span class="p-badge ${cls}">${escapeHtml(s)}</span>`;
+  }
+  function priorityStars(n){
+    n = parseInt(n)||0;
+    if (!n) return "";
+    let s = "";
+    for (let i=0;i<n;i++) s += "&#9733;";
+    return `<span class="p-star">${s}</span>`;
+  }
+  function toast(msg){
+    const el = $("#pToast");
+    el.textContent = msg; el.classList.add("show");
+    setTimeout(()=>el.classList.remove("show"), 2200);
+  }
+
+  function showConfirm(message, onYes){
+    $("#pConfirmMsg").textContent = message;
+    $("#pConfirmBg").classList.add("show");
+    const yesBtn = $("#pConfirmYes");
+    const noBtn = $("#pConfirmNo");
+    function cleanup(){
+      $("#pConfirmBg").classList.remove("show");
+      yesBtn.removeEventListener("click", yesHandler);
+      noBtn.removeEventListener("click", noHandler);
+    }
+    function yesHandler(){ cleanup(); onYes(); }
+    function noHandler(){ cleanup(); }
+    yesBtn.addEventListener("click", yesHandler);
+    noBtn.addEventListener("click", noHandler);
+  }
+
+  async function loadData(){
+    try {
+      const res = await window.storage.get(STORAGE_KEY, false);
+      articles = res && res.value ? JSON.parse(res.value) : [];
+    } catch(e) { articles = []; }
+  }
+  async function saveData(){
+    try {
+      await window.storage.set(STORAGE_KEY, JSON.stringify(articles), false);
+      lastSavedAt = new Date();
+      showSaveIndicator();
+    } catch(e) { console.error("Storage error:", e); }
+  }
+  function showSaveIndicator(){
+    const el = $("#pSaveInd");
+    if (!el || !lastSavedAt) return;
+    el.textContent = "Tersimpan " + lastSavedAt.toLocaleTimeString("ms-MY");
+    el.classList.add("show");
+    setTimeout(()=>el.classList.remove("show"), 2500);
+  }
+
+  async function loadGasUrl(){
+    try {
+      const res = await window.storage.get(GAS_URL_KEY, false);
+      gasUrl = res && res.value ? res.value : "";
+    } catch(e) { gasUrl = ""; }
+  }
+  async function persistGasUrl(url){
+    try { await window.storage.set(GAS_URL_KEY, url, false); } catch(e) { console.error("Storage error:", e); }
+  }
+
+  /* ---------- TARGET / BENCHMARK — user-editable, persisted, not a hard cap ---------- */
+  async function loadTarget(){
+    try {
+      const res = await window.storage.get(TARGET_KEY, false);
+      if (res && res.value) {
+        const n = parseInt(res.value);
+        if (n > 0) TARGET = n;
+      }
+    } catch(e) { /* keep default */ }
+  }
+  async function saveTarget(n){
+    TARGET = n;
+    try { await window.storage.set(TARGET_KEY, String(n), false); } catch(e) { console.error("Storage error:", e); }
+  }
+  function openTargetEditor(){
+    $("#pTargetContent").innerHTML = `
+      <h3 class="serif">Ubah Penanda Aras Rujukan</h3>
+      <p style="font-size:12px;color:var(--ink-soft);line-height:1.6;margin-bottom:10px">Ini bukan had maksimum — lebih banyak rujukan berkualiti biasanya lebih kukuh untuk tesis. Nombor ini cuma penanda aras peribadi untuk anda pantau kemajuan.</p>
+      <div class="p-ff" style="margin-bottom:12px">
+        <label>Bilangan sasaran</label>
+        <input id="pTargetInput" type="number" min="1" value="${TARGET}" style="padding:8px 10px;font-size:14px;border:1px solid var(--line);border-radius:4px;width:120px">
+      </div>
+      <div class="p-modal-actions">
+        <button class="p-btn outline" id="pTargetCancel">Batal</button>
+        <button class="p-btn gold" id="pTargetSaveBtn">Simpan</button>
+      </div>
+    `;
+    $("#pTargetBg").classList.add("show");
+    $("#pTargetCancel").addEventListener("click", () => $("#pTargetBg").classList.remove("show"));
+    $("#pTargetSaveBtn").addEventListener("click", async () => {
+      const n = parseInt($("#pTargetInput").value);
+      if (!n || n < 1) { toast("Masukkan nombor yang sah."); return; }
+      await saveTarget(n);
+      $("#pTargetBg").classList.remove("show");
+      renderStats();
+      toast(`Penanda aras dikemas kini kepada ${n}.`);
+    });
+  }
+
+  /* ---------- RESEARCH OBJECTIVES (RO) — user-editable, persisted ---------- */
+  async function loadROS(){
+    try {
+      const res = await window.storage.get(ROS_KEY, false);
+      if (res && res.value) {
+        const parsed = JSON.parse(res.value);
+        if (Array.isArray(parsed) && parsed.length) ROS = parsed;
+      }
+    } catch(e) { /* keep default ROS */ }
+  }
+  async function saveROS(){
+    try { await window.storage.set(ROS_KEY, JSON.stringify(ROS), false); } catch(e) { console.error("Storage error:", e); }
+  }
+  function renderRoChips(){
+    $("#pRoRow").innerHTML = ROS.map(r => `<span class="p-ro"><b>${escapeHtml(r.k)}</b> ${escapeHtml(r.n)}</span>`).join("")
+      + `<button class="p-ro" id="pRoManageBtn" style="cursor:pointer;background:rgba(169,120,47,.25);border-color:var(--gold)">&#9881; Urus RO</button>`;
+    $("#pRoManageBtn").addEventListener("click", openRoManager);
+    $("#pPromptText").textContent = buildPromptText();
+  }
+  function refreshRoFilterSelect(){
+    const sel = $("#pDbRoFilter");
+    if (!sel) return;
+    const current = sel.value;
+    sel.innerHTML = `<option value="">Semua RO</option>` + ROS.map(r => `<option value="${escapeHtml(r.k)}">${escapeHtml(r.k)} — ${escapeHtml(r.n)}</option>`).join("");
+    sel.value = ROS.some(r=>r.k===current) ? current : "";
+  }
+  function afterRoChange(){
+    renderRoChips();
+    refreshRoFilterSelect();
+    if (activeTab === "database") renderDatabase();
+    if (activeTab === "matrix") renderMatrix();
+  }
+
+  function openRoManager(){ renderRoManager(); $("#pRoBg").classList.add("show"); }
+  function closeRoManager(){ $("#pRoBg").classList.remove("show"); }
+  function findOrphanRoCodes(){
+    const valid = new Set(ROS.map(r=>r.k));
+    const orphans = new Set();
+    articles.forEach(a => asArray(a.ro).forEach(c => { if (c && !valid.has(c)) orphans.add(c); }));
+    return Array.from(orphans);
+  }
+  function renderRoManager(){
+    const orphanCodes = findOrphanRoCodes();
+    $("#pRoContent").innerHTML = `
+      <h3 class="serif">Urus Objektif Kajian (RO)</h3>
+      <p style="font-size:12px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px">RO di sini digunakan di seluruh sistem — header, penapis Database, Matriks Tesis, Analitik dan arahan Import AI akan dikemas kini automatik selepas anda simpan. Nota: artikel sedia ada yang sudah ditanda dengan kod RO lama perlu disunting manual jika kod ditukar/dipadam.</p>
+      <div id="pRoRows"></div>
+      <button class="p-btn outline small" id="pRoAddBtn" style="margin-top:6px">+ Tambah RO</button>
+      ${orphanCodes.length ? `
+      <div style="background:#F3E6C8;border:1px solid #E0C88A;border-radius:7px;padding:10px 12px;margin-top:14px">
+        <div style="font-size:12px;font-weight:700;color:#8E6423;margin-bottom:6px">&#9888; ${orphanCodes.length} kod RO lama dikesan dalam artikel sedia ada</div>
+        <div style="font-size:11.5px;color:#6B4F0F;margin-bottom:8px">Kod ini pernah wujud tapi dah ditukar/dipadam daripada senarai RO semasa. Pilih nak selaraskan setiap satu ke RO mana, atau buang tag berkenaan.</div>
+        <div id="pRoOrphanRows"></div>
+        <button class="p-btn gold small" id="pRoMigrateBtn" style="margin-top:8px">Selaraskan Sekarang</button>
+      </div>` : ''}
+      <div class="p-modal-actions">
+        <button class="p-btn outline" id="pRoCancel">Batal</button>
+        <button class="p-btn gold" id="pRoSave">Simpan</button>
+      </div>
+    `;
+    renderRoRows(ROS.map(r => ({...r})));
+
+    if (orphanCodes.length) {
+      $("#pRoOrphanRows").innerHTML = orphanCodes.map(code => {
+        const count = articles.filter(a => asArray(a.ro).includes(code)).length;
+        return `<div style="display:flex;gap:6px;align-items:center;margin-bottom:5px" data-orphan="${escapeHtml(code)}">
+          <span class="mono" style="font-size:11px;min-width:52px;color:var(--danger)">${escapeHtml(code)}</span>
+          <span style="font-size:10.5px;color:var(--ink-soft);min-width:70px">(${count} artikel)</span>
+          <select class="orphan-target" style="flex:1;padding:4px 6px;font-size:11px;border:1px solid var(--line);border-radius:4px">
+            <option value="">— Buang tag ini —</option>
+            ${ROS.map(r=>`<option value="${escapeHtml(r.k)}">${escapeHtml(r.k)} — ${escapeHtml(r.n)}</option>`).join("")}
+          </select>
+        </div>`;
+      }).join("");
+      $("#pRoMigrateBtn").addEventListener("click", async () => {
+        const mappings = {};
+        $$("[data-orphan]", $("#pRoOrphanRows")).forEach(row => {
+          mappings[row.dataset.orphan] = $(".orphan-target", row).value;
+        });
+        articles.forEach(a => {
+          const mapped = asArray(a.ro).map(c => mappings.hasOwnProperty(c) ? mappings[c] : c).filter(c => c);
+          a.ro = Array.from(new Set(mapped));
+        });
+        await saveData();
+        renderStats();
+        if (activeTab === "database") renderDatabase();
+        if (activeTab === "matrix") renderMatrix();
+        toast("Kod RO lama diselaraskan pada semua artikel berkaitan.");
+        renderRoManager();
+      });
+    }
+
+    $("#pRoAddBtn").addEventListener("click", () => {
+      const rows = readRoRows();
+      rows.push({k: "RO" + (rows.length+1), n: ""});
+      renderRoRows(rows);
+    });
+    $("#pRoCancel").addEventListener("click", closeRoManager);
+    $("#pRoSave").addEventListener("click", async () => {
+      const rows = readRoRows().filter(r => r.k.trim() && r.n.trim());
+      if (!rows.length) { toast("Sekurang-kurangnya satu RO diperlukan."); return; }
+      ROS = rows;
+      await saveROS();
+      afterRoChange();
+      toast("RO dikemas kini — sistem dikemas kini automatik.");
+      renderRoManager();
+    });
+  }
+  function renderRoRows(rows){
+    $("#pRoRows").innerHTML = rows.map((r, i) => `
+      <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center" data-ro-row="${i}">
+        <div style="display:flex;flex-direction:column;gap:1px">
+          <button class="p-btn outline small ro-up" data-i="${i}" ${i===0?"disabled":""} title="Naik" style="padding:1px 6px;font-size:9px;line-height:1.4">&#9650;</button>
+          <button class="p-btn outline small ro-down" data-i="${i}" ${i===rows.length-1?"disabled":""} title="Turun" style="padding:1px 6px;font-size:9px;line-height:1.4">&#9660;</button>
+        </div>
+        <input class="ro-k" value="${escapeHtml(r.k)}" placeholder="RO1" style="width:70px;padding:6px 8px;font-size:12px;border:1px solid var(--line);border-radius:4px;font-family:'IBM Plex Mono',monospace">
+        <input class="ro-n" value="${escapeHtml(r.n)}" placeholder="Deskripsi objektif" style="flex:1;padding:6px 8px;font-size:12px;border:1px solid var(--line);border-radius:4px">
+        <button class="p-btn danger small ro-del" data-i="${i}">&times;</button>
+      </div>
+    `).join("");
+    $$(".ro-del", $("#pRoRows")).forEach(btn => {
+      btn.addEventListener("click", () => {
+        const rows2 = readRoRows();
+        rows2.splice(parseInt(btn.dataset.i), 1);
+        renderRoRows(rows2);
+      });
+    });
+    $$(".ro-up", $("#pRoRows")).forEach(btn => {
+      btn.addEventListener("click", () => {
+        const rows2 = readRoRows();
+        const i = parseInt(btn.dataset.i);
+        if (i > 0) { [rows2[i-1], rows2[i]] = [rows2[i], rows2[i-1]]; renderRoRows(rows2); }
+      });
+    });
+    $$(".ro-down", $("#pRoRows")).forEach(btn => {
+      btn.addEventListener("click", () => {
+        const rows2 = readRoRows();
+        const i = parseInt(btn.dataset.i);
+        if (i < rows2.length-1) { [rows2[i], rows2[i+1]] = [rows2[i+1], rows2[i]]; renderRoRows(rows2); }
+      });
+    });
+  }
+  function readRoRows(){
+    return $$("[data-ro-row]", $("#pRoRows")).map(row => ({
+      k: $(".ro-k", row).value.trim(),
+      n: $(".ro-n", row).value.trim()
+    }));
+  }
+
+  /* ---------- PRIORITY S00 DOCS — user-editable, persisted, unlimited count ---------- */
+  async function loadPriorityDocs(){
+    try {
+      const res = await window.storage.get(PRIORITY_DOCS_KEY, false);
+      if (res && res.value) {
+        const parsed = JSON.parse(res.value);
+        if (Array.isArray(parsed) && parsed.length) PRIORITY_S00_DOCS = parsed;
+      }
+    } catch(e) { /* keep default list */ }
+  }
+  async function savePriorityDocs(){
+    try { await window.storage.set(PRIORITY_DOCS_KEY, JSON.stringify(PRIORITY_S00_DOCS), false); } catch(e) { console.error("Storage error:", e); }
+  }
+  function openPriorityManager(){ renderPriorityManager(); $("#pPriorityBg").classList.add("show"); }
+  function closePriorityManager(){ $("#pPriorityBg").classList.remove("show"); }
+  function renderPriorityManager(){
+    $("#pPriorityContent").innerHTML = `
+      <h3 class="serif">Urus Senarai Dokumen Dasar Diutamakan</h3>
+      <p style="font-size:12px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px">Tambah seberapa banyak dokumen dasar/rangka kerja yang anda anggap penting — tiada had 5. "Kata kunci padanan" digunakan untuk kesan automatik jika dokumen tu dah diimport (guna sebahagian tajuk yang unik, huruf kecil).</p>
+      <div id="pPriorityRows"></div>
+      <button class="p-btn outline small" id="pPriorityAddBtn" style="margin-top:6px">+ Tambah Dokumen</button>
+      <div class="p-modal-actions">
+        <button class="p-btn outline" id="pPriorityCancel">Batal</button>
+        <button class="p-btn gold" id="pPrioritySave">Simpan</button>
+      </div>
+    `;
+    renderPriorityRows(PRIORITY_S00_DOCS.map(d => ({...d})));
+    $("#pPriorityAddBtn").addEventListener("click", () => {
+      const rows = readPriorityRows();
+      rows.push({org:"", tajuk:"", tahun:"", kw:""});
+      renderPriorityRows(rows);
+    });
+    $("#pPriorityCancel").addEventListener("click", closePriorityManager);
+    $("#pPrioritySave").addEventListener("click", async () => {
+      const rows = readPriorityRows().filter(r => r.tajuk.trim());
+      PRIORITY_S00_DOCS = rows.map(r => ({...r, kw: (r.kw || normalizeTitle(r.tajuk)).toLowerCase()}));
+      await savePriorityDocs();
+      closePriorityManager();
+      if (activeTab === "tema") renderTema();
+      toast(`Senarai dikemas kini — ${PRIORITY_S00_DOCS.length} dokumen.`);
+    });
+  }
+  function renderPriorityRows(rows){
+    $("#pPriorityRows").innerHTML = rows.map((r, i) => `
+      <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center" data-pr-row="${i}">
+        <input class="pr-org" value="${escapeHtml(r.org)}" placeholder="UNESCO" style="width:80px;padding:6px 8px;font-size:12px;border:1px solid var(--line);border-radius:4px">
+        <input class="pr-tajuk" value="${escapeHtml(r.tajuk)}" placeholder="Tajuk dokumen" style="flex:2;padding:6px 8px;font-size:12px;border:1px solid var(--line);border-radius:4px">
+        <input class="pr-tahun" value="${escapeHtml(r.tahun)}" placeholder="Tahun" style="width:60px;padding:6px 8px;font-size:12px;border:1px solid var(--line);border-radius:4px">
+        <input class="pr-kw" value="${escapeHtml(r.kw)}" placeholder="kata kunci (auto jika kosong)" style="flex:1.5;padding:6px 8px;font-size:11px;border:1px solid var(--line);border-radius:4px">
+        <button class="p-btn danger small pr-del" data-i="${i}">&times;</button>
+      </div>
+    `).join("");
+    $$(".pr-del", $("#pPriorityRows")).forEach(btn => {
+      btn.addEventListener("click", () => {
+        const rows2 = readPriorityRows();
+        rows2.splice(parseInt(btn.dataset.i), 1);
+        renderPriorityRows(rows2);
+      });
+    });
+  }
+  function readPriorityRows(){
+    return $$("[data-pr-row]", $("#pPriorityRows")).map(row => ({
+      org: $(".pr-org", row).value.trim(),
+      tajuk: $(".pr-tajuk", row).value.trim(),
+      tahun: $(".pr-tahun", row).value.trim(),
+      kw: $(".pr-kw", row).value.trim()
+    }));
+  }
+
+  /* ---------- TEMA MAP — user-editable, persisted, with orphan-code migration ---------- */
+  async function loadTemaMap(){
+    try {
+      const res = await window.storage.get(TEMA_KEY, false);
+      if (res && res.value) {
+        const parsed = JSON.parse(res.value);
+        if (parsed && Object.keys(parsed).length) TEMA_MAP = parsed;
+      }
+    } catch(e) { /* keep default */ }
+  }
+  async function saveTemaMap(){
+    try { await window.storage.set(TEMA_KEY, JSON.stringify(TEMA_MAP), false); } catch(e) { console.error("Storage error:", e); }
+  }
+  function refreshTemaFilterSelect(){
+    const sel = $("#pDbTemaFilter");
+    if (sel) {
+      const current = sel.value;
+      sel.innerHTML = `<option value="">Semua Tema</option>` + Object.keys(TEMA_MAP).map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)} — ${escapeHtml(TEMA_MAP[c])}</option>`).join("");
+      sel.value = TEMA_MAP.hasOwnProperty(current) ? current : "";
+    }
+    const bw = $("#pBwTema");
+    if (bw) {
+      const current2 = bw.value;
+      bw.innerHTML = `<option value="">Pilih subtopik...</option>` + Object.keys(TEMA_MAP).map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)} — ${escapeHtml(TEMA_MAP[c])}</option>`).join("");
+      bw.value = TEMA_MAP.hasOwnProperty(current2) ? current2 : "";
+    }
+  }
+  function afterTemaChange(){
+    refreshTemaFilterSelect();
+    if (activeTab === "database") renderDatabase();
+    if (activeTab === "babwriter") renderBabWriter();
+    if (activeTab === "tema") renderTema();
+    if (activeTab === "citation") renderCitation();
+    if (activeTab === "sintesis") renderSintesis();
+    $("#pPromptText").textContent = buildPromptText();
+  }
+
+  function openTemaManager(){ renderTemaManager(); $("#pTemaMgrBg").classList.add("show"); }
+  function closeTemaManager(){ $("#pTemaMgrBg").classList.remove("show"); }
+  function findOrphanTemaCodes(){
+    const valid = new Set(Object.keys(TEMA_MAP));
+    const orphans = new Set();
+    articles.forEach(a => asArray(a.topik).forEach(c => { if (c && !valid.has(c)) orphans.add(c); }));
+    return Array.from(orphans);
+  }
+  function renderTemaManager(){
+    const orphanCodes = findOrphanTemaCodes();
+    $("#pTemaMgrContent").innerHTML = `
+      <h3 class="serif">Urus Tema / Subtopik</h3>
+      <p style="font-size:12px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px">Tukar nama sahaja (kod tak berubah) SELAMAT sepenuhnya — artikel simpan kod, bukan nama. Tukar/padam KOD pula boleh cicirkan artikel lama; alat penyelarasan di bawah akan bantu jika berlaku.</p>
+      <div id="pTemaMgrRows" style="max-height:320px;overflow-y:auto"></div>
+      <button class="p-btn outline small" id="pTemaMgrAddBtn" style="margin-top:6px">+ Tambah Tema</button>
+      ${orphanCodes.length ? `
+      <div style="background:#F3E6C8;border:1px solid #E0C88A;border-radius:7px;padding:10px 12px;margin-top:14px">
+        <div style="font-size:12px;font-weight:700;color:#8E6423;margin-bottom:6px">&#9888; ${orphanCodes.length} kod tema lama dikesan dalam artikel sedia ada</div>
+        <div style="font-size:11.5px;color:#6B4F0F;margin-bottom:8px">Kod ini pernah wujud tapi dah ditukar/dipadam. Pilih nak selaraskan ke tema mana, atau buang tag berkenaan.</div>
+        <div id="pTemaMgrOrphanRows"></div>
+        <button class="p-btn gold small" id="pTemaMgrMigrateBtn" style="margin-top:8px">Selaraskan Sekarang</button>
+      </div>` : ''}
+      <div class="p-modal-actions">
+        <button class="p-btn outline" id="pTemaMgrCancel">Batal</button>
+        <button class="p-btn gold" id="pTemaMgrSave">Simpan</button>
+      </div>
+    `;
+    renderTemaMgrRows(Object.keys(TEMA_MAP).map(c => ({k:c, n:TEMA_MAP[c]})));
+
+    if (orphanCodes.length) {
+      $("#pTemaMgrOrphanRows").innerHTML = orphanCodes.map(code => {
+        const count = articles.filter(a => asArray(a.topik).includes(code)).length;
+        return `<div style="display:flex;gap:6px;align-items:center;margin-bottom:5px" data-orphan="${escapeHtml(code)}">
+          <span class="mono" style="font-size:11px;min-width:52px;color:var(--danger)">${escapeHtml(code)}</span>
+          <span style="font-size:10.5px;color:var(--ink-soft);min-width:70px">(${count} artikel)</span>
+          <select class="orphan-target-tema" style="flex:1;padding:4px 6px;font-size:11px;border:1px solid var(--line);border-radius:4px">
+            <option value="">— Buang tag ini —</option>
+            ${Object.keys(TEMA_MAP).map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)} — ${escapeHtml(TEMA_MAP[c])}</option>`).join("")}
+          </select>
+        </div>`;
+      }).join("");
+      $("#pTemaMgrMigrateBtn").addEventListener("click", async () => {
+        const mappings = {};
+        $$("[data-orphan]", $("#pTemaMgrOrphanRows")).forEach(row => {
+          mappings[row.dataset.orphan] = $(".orphan-target-tema", row).value;
+        });
+        articles.forEach(a => {
+          const mapped = asArray(a.topik).map(c => mappings.hasOwnProperty(c) ? mappings[c] : c).filter(c => c);
+          a.topik = Array.from(new Set(mapped));
+        });
+        await saveData();
+        renderStats();
+        afterTemaChange();
+        toast("Kod tema lama diselaraskan pada semua artikel berkaitan.");
+        renderTemaManager();
+      });
+    }
+
+    $("#pTemaMgrAddBtn").addEventListener("click", () => {
+      const rows = readTemaMgrRows();
+      rows.push({k: "S" + String(rows.length).padStart(2,"0"), n: ""});
+      renderTemaMgrRows(rows);
+    });
+    $("#pTemaMgrCancel").addEventListener("click", closeTemaManager);
+    $("#pTemaMgrSave").addEventListener("click", async () => {
+      const rows = readTemaMgrRows().filter(r => r.k.trim() && r.n.trim());
+      if (!rows.length) { toast("Sekurang-kurangnya satu tema diperlukan."); return; }
+      const newMap = {};
+      rows.forEach(r => { newMap[r.k.trim()] = r.n.trim(); });
+      TEMA_MAP = newMap;
+      await saveTemaMap();
+      afterTemaChange();
+      toast("Tema dikemas kini — sistem dikemas kini automatik.");
+      renderTemaManager();
+    });
+  }
+  function renderTemaMgrRows(rows){
+    $("#pTemaMgrRows").innerHTML = rows.map((r, i) => `
+      <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center" data-tm-row="${i}">
+        <input class="tm-k" value="${escapeHtml(r.k)}" placeholder="S20" style="width:60px;padding:6px 8px;font-size:12px;border:1px solid var(--line);border-radius:4px;font-family:'IBM Plex Mono',monospace">
+        <input class="tm-n" value="${escapeHtml(r.n)}" placeholder="Nama tema" style="flex:1;padding:6px 8px;font-size:12px;border:1px solid var(--line);border-radius:4px">
+        <button class="p-btn danger small tm-del" data-i="${i}">&times;</button>
+      </div>
+    `).join("");
+    $$(".tm-del", $("#pTemaMgrRows")).forEach(btn => {
+      btn.addEventListener("click", () => {
+        const rows2 = readTemaMgrRows();
+        rows2.splice(parseInt(btn.dataset.i), 1);
+        renderTemaMgrRows(rows2);
+      });
+    });
+  }
+  function readTemaMgrRows(){
+    return $$("[data-tm-row]", $("#pTemaMgrRows")).map(row => ({
+      k: $(".tm-k", row).value.trim(),
+      n: $(".tm-n", row).value.trim()
+    }));
+  }
+
+  function renderNav(){
+    const nav = $("#pNav");
+    nav.innerHTML = TABS.map(t =>
+      `<button class="p-tab${t.id===activeTab?' active':''}" data-tab="${t.id}"><span class="n">${t.n}</span>${escapeHtml(t.label)}</button>`
+    ).join("");
+    $$(".p-tab", nav).forEach(btn => btn.addEventListener("click", () => switchTab(btn.dataset.tab)));
+  }
+
+  function switchTab(id){
+    activeTab = id;
+    renderNav();
+    $$(".p-panel").forEach(p => p.classList.toggle("active", p.dataset.panel === id));
+    if (id === "database") renderDatabase();
+    if (id === "babwriter") renderBabWriter();
+    if (id === "matrix") renderMatrix();
+    if (id === "evidence") renderEvidence();
+    if (id === "citation") renderCitation();
+    if (id === "gap") renderGap();
+    if (id === "tema") renderTema();
+    if (id === "sintesis") renderSintesis();
+    if (id === "apa") renderApa();
+  }
+
+  function renderStats(){
+    const total = articles.length;
+    const malaysia = articles.filter(a => (a.negara||"").toLowerCase().includes("malaysia")).length;
+    const pdfCount = articles.filter(a => a.pdf && a.pdf !== "none").length;
+    const years = articles.map(a=>parseInt(a.tahun)).filter(y=>!isNaN(y));
+    const yearRange = years.length ? `${Math.min(...years)}-${Math.max(...years)}` : "-";
+    const tinggi = articles.filter(a => a.tahapKepentingan === "Tinggi").length;
+    const pct = total ? Math.round((total/TARGET)*100) : 0;
+    const sasaranDisplay = total >= TARGET ? `&#127881; ${pct}%` : `${pct}%`;
+
+    $("#pStats").innerHTML = `
+      <div class="p-stat"><div class="p-stat-num">${total}</div><div class="p-stat-label">Artikel</div></div>
+      <div class="p-stat"><div class="p-stat-num">${malaysia}</div><div class="p-stat-label">Malaysia</div></div>
+      <div class="p-stat"><div class="p-stat-num">${pdfCount}</div><div class="p-stat-label">PDF</div></div>
+      <div class="p-stat"><div class="p-stat-num" style="font-size:15px">${yearRange}</div><div class="p-stat-label">Julat Tahun</div></div>
+      <div class="p-stat"><div class="p-stat-num" style="color:var(--success)">${tinggi}</div><div class="p-stat-label">Kepentingan Tinggi</div></div>
+      <div class="p-stat" style="position:relative">
+        <div class="p-stat-num">${sasaranDisplay}</div>
+        <div class="p-stat-label">Penanda Aras ${TARGET}+ <span id="pTargetEditBtn" style="cursor:pointer;text-decoration:underline;color:var(--maroon)" title="Ubah penanda aras">&#9998;</span></div>
+      </div>
+    `;
+    $("#pTargetEditBtn").addEventListener("click", openTargetEditor);
+  }
+
+  function ensureSelectOptions(sel, entries, allLabel){
+    if (sel.options.length <= 1) {
+      if (allLabel) { /* first option already present */ }
+      entries.forEach(([val, label]) => {
+        const opt = document.createElement("option");
+        opt.value = val; opt.textContent = label;
+        sel.appendChild(opt);
+      });
+    }
+  }
+
+  /* ---------- DATABASE ---------- */
+  function renderDatabase(){
+    const wrap = $("#pDbTableWrap");
+    refreshTemaFilterSelect();
+    refreshRoFilterSelect();
+
+    let list = articles.slice();
+    if (dbFilter.search) {
+      const s = dbFilter.search.toLowerCase();
+      list = list.filter(a => (a.tajuk||"").toLowerCase().includes(s) || (a.penulis||"").toLowerCase().includes(s) || (a.kod||"").toLowerCase().includes(s));
+    }
+    if (dbFilter.tema) list = list.filter(a => asArray(a.topik).includes(dbFilter.tema));
+    if (dbFilter.negara === "malaysia") list = list.filter(a => isMalaysia(a.negara));
+    else if (dbFilter.negara === "int") list = list.filter(a => a.negara && !isMalaysia(a.negara));
+    if (dbFilter.ro) list = list.filter(a => asArray(a.ro).includes(dbFilter.ro));
+    if (dbFilter.kepentingan) list = list.filter(a => a.tahapKepentingan === dbFilter.kepentingan);
+    if (dbFilter.tahap) list = list.filter(a => a.tahapArtikel === dbFilter.tahap);
+    if (dbFilter.quartile) list = list.filter(a => a.quartile === dbFilter.quartile);
+    if (dbFilter.pdf) list = list.filter(a => (a.pdf || "none") === dbFilter.pdf);
+    if (dbFilter.used === "used") list = list.filter(a => asArray(a.digunakanDalam).length > 0);
+    else if (dbFilter.used === "unused") list = list.filter(a => asArray(a.digunakanDalam).length === 0);
+    if (dbFilter.warna) list = list.filter(a => a.prioritiWarna === dbFilter.warna);
+    if (dbFilter.baca) list = list.filter(a => (a.statusBacaan || "Belum") === dbFilter.baca);
+    if (dbFilter.peringkat) list = list.filter(a => a.peringkatPendidikan === dbFilter.peringkat);
+
+    if (!list.length) {
+      wrap.innerHTML = `<div class="p-empty"><div class="big">&#128218;</div>Tiada artikel lagi. Pergi ke tab <b>Import AI</b> untuk mula tambah artikel.</div>`;
+      return;
+    }
+
+    wrap.innerHTML = `<table class="p-table"><thead><tr>
+      <th></th><th>Kod</th><th>Tajuk</th><th>Penulis (Tahun)</th><th>Negara</th><th>Quartile</th><th>Tema</th><th>PDF</th><th>RO</th><th>Bab</th><th>Digunakan</th><th>Baca</th><th>⭐</th><th>Kepentingan</th><th></th>
+    </tr></thead><tbody>${list.map(a => {
+      const origIndex = articles.indexOf(a);
+      const pdfStatus = a.pdf || "none";
+      const pdfCell = a.gdrive
+        ? `<a href="${escapeHtml(a.gdrive)}" target="_blank" title="${PDF_LABEL[pdfStatus]} — buka fail" onclick="event.stopPropagation()" style="text-decoration:none">${PDF_ICON[pdfStatus]}</a>`
+        : `<span title="${PDF_LABEL[pdfStatus]}">${PDF_ICON[pdfStatus]}</span>`;
+      const usedList = asArray(a.digunakanDalam);
+      const usedCell = usedList.length
+        ? usedList.map(u=>`<span class="p-used-badge">${escapeHtml(u)}</span>`).join('')
+        : `<span class="p-used-none">Belum</span>`;
+      const warnaCell = a.prioritiWarna ? `<span class="p-dot ${escapeHtml(a.prioritiWarna)}" title="${WARNA_LABEL[a.prioritiWarna]||''}"></span>` : '';
+      const bacaCell = bacaBadge(a.statusBacaan);
+      return `<tr data-idx="${origIndex}">
+        <td style="text-align:center">${warnaCell}</td>
+        <td class="mono">${escapeHtml(a.kod||'-')}</td>
+        <td style="max-width:220px">${escapeHtml(a.tajuk||'-')}</td>
+        <td>${escapeHtml(a.penulis||'-')} ${a.tahun?`(${escapeHtml(a.tahun)})`:''}</td>
+        <td>${negaraBadge(a.negara)}</td>
+        <td>${quartileBadge(a.quartile)}</td>
+        <td>${asArray(a.topik).map(t=>`<span class="p-badge">${escapeHtml(t)}</span>`).join('')}</td>
+        <td style="text-align:center;font-size:14px">${pdfCell}</td>
+        <td>${asArray(a.ro).map(r=>`<span class="p-badge ro">${escapeHtml(r)}</span>`).join('') || '-'}</td>
+        <td>${asArray(a.babDisokong).map(b=>`<span class="p-badge bab">${escapeHtml(b)}</span>`).join('') || '-'}</td>
+        <td>${usedCell}</td>
+        <td>${bacaCell}</td>
+        <td style="white-space:nowrap;font-size:11px">${priorityStars(a.priority) || '<span class="p-used-none">-</span>'}</td>
+        <td>${kepentinganBadge(a.tahapKepentingan)}</td>
+        <td><button class="p-btn outline small p-edit-btn" data-idx="${origIndex}">Sunting</button> <button class="p-btn danger small p-del-btn" data-idx="${origIndex}">Padam</button></td>
+      </tr>`;
+    }).join("")}</tbody></table>`;
+
+    $$("tr[data-idx]", wrap).forEach(tr => {
+      tr.addEventListener("click", (e) => {
+        if (e.target.classList.contains("p-del-btn") || e.target.classList.contains("p-edit-btn")) return;
+        openModal(articles[parseInt(tr.dataset.idx)]);
+      });
+    });
+    $$(".p-edit-btn", wrap).forEach(btn => {
+      btn.addEventListener("click", (e) => { e.stopPropagation(); openEditForm(articles[parseInt(btn.dataset.idx)].kod); });
+    });
+    $$(".p-del-btn", wrap).forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const idx = parseInt(btn.dataset.idx);
+        const a = articles[idx];
+        showConfirm(`Padam artikel "${a ? (a.tajuk||a.kod) : ''}"?`, async () => {
+          articles.splice(idx, 1);
+          await saveData();
+          renderStats(); renderDatabase();
+          toast("Artikel dipadam.");
+        });
+      });
+    });
+  }
+
+  function openModal(a){
+    const fields = [
+      ["Kod", a.kod], ["Kategori", a.kategori], ["Tajuk", a.tajuk], ["Penulis", a.penulis], ["Tahun", a.tahun],
+      ["Jurnal", a.jurnal], ["Vol", a.vol], ["DOI", a.doi],
+      ["URL Rasmi", a.urlRasmi ? `<a href="${escapeHtml(a.urlRasmi)}" target="_blank">${escapeHtml(a.urlRasmi)}</a>` : ""],
+      ["Negara", a.negara], ["Peringkat Pendidikan", a.peringkatPendidikan],
+      ["Jenis", a.jenis], ["Reka Bentuk Kajian", a.rekaBentukKajian], ["Quartile", a.quartile], ["Impak Faktor", a.impakFaktor],
+      ["Kata Kunci", asArray(a.kataKunci).join(", ")],
+      ["Status PDF", a.pdf], ["Link PDF", a.gdrive ? `<a href="${escapeHtml(a.gdrive)}" target="_blank">${escapeHtml(a.gdrive)}</a>` : ""],
+      ["Sampel", a.sampel], ["Objektif", a.obj],
+      ["Persoalan Kajian", asArray(a.persoalanKajian).map(d=>"• "+escapeHtml(d)).join("<br>")],
+      ["Kaedah", a.kaedah], ["Instrumen", a.instrumen], ["Kaedah Analisis", a.kaedahAnalisis],
+      ["Teori", asArray(a.teori).join("; ")], ["DV", a.dv], ["IV", a.iv],
+      ["Mediator", a.mediator], ["Moderator", a.moderator],
+      ["Dapatan", asArray(a.dapatan).map(d=>"• "+escapeHtml(d)).join("<br>")],
+      ["Kelemahan Kajian", asArray(a.kelemahanKajian).map(d=>"• "+escapeHtml(d)).join("<br>")],
+      ["Cadangan Kajian Akan Datang", asArray(a.cadanganKajian).map(d=>"• "+escapeHtml(d)).join("<br>")],
+      ["Kebaharuan (Novelty)", a.novelty],
+      ["Gap", asArray(a.gap).map(d=>"• "+escapeHtml(d)).join("<br>")],
+      ["Kaitan Dengan Kajian", a.kaitan], ["Ayat Akademik", a.ayat],
+      ["Petikan Penting / Idea Utama", asArray(a.petikan).map(d=>"• "+escapeHtml(d)).join("<br>")],
+      ["Digunakan Dalam Penulisan", asArray(a.digunakanDalam).length ? asArray(a.digunakanDalam).map(u=>`<span class="p-used-badge">${escapeHtml(u)}</span>`).join(' ') : '<span class="p-used-none">Belum digunakan</span>'],
+      ["Bab Disokong", asArray(a.babDisokong).join(", ")], ["RO", asArray(a.ro).join(", ")], ["Topik", asArray(a.topik).join(", ")],
+      ["Tahap Artikel", a.tahapArtikel], ["Tahap Kepentingan", a.tahapKepentingan],
+      ["Prioriti Warna", a.prioritiWarna ? `<span class="p-dot ${escapeHtml(a.prioritiWarna)}"></span> ${escapeHtml(WARNA_LABEL[a.prioritiWarna]||'')}` : ""],
+      ["Status Bacaan", bacaBadge(a.statusBacaan)],
+      ["Penarafan Artikel", a.priority ? priorityStars(a.priority) : ""], ["Nota", a.nota]
+    ];
+    $("#pModalContent").innerHTML = `
+      <h3 class="serif">${escapeHtml(a.tajuk||"Artikel")}</h3>
+      ${fields.filter(f=>f[1]).map(f => `<div class="p-field"><div class="lbl">${escapeHtml(f[0])}</div><div class="val">${f[1]}</div></div>`).join("")}
+      <div class="p-modal-actions">
+        <button class="p-btn outline" id="pModalEditBtn">Sunting</button>
+        <button class="p-btn outline" id="pModalClose">Tutup</button>
+      </div>
+    `;
+    $("#pModalBg").classList.add("show");
+    $("#pModalClose").addEventListener("click", closeModal);
+    $("#pModalEditBtn").addEventListener("click", () => { closeModal(); openEditForm(a.kod); });
+  }
+  function closeModal(){ $("#pModalBg").classList.remove("show"); }
+
+  /* ---------- MANUAL ADD / EDIT ---------- */
+  function fieldRow(label, id, type, opts){
+    opts = opts || {};
+    const full = opts.full ? " full" : "";
+    if (type === "select") {
+      return `<div class="p-ff${full}"><label>${label}</label><select id="${id}">${opts.options.map(o=>`<option value="${o.v}">${o.l}</option>`).join("")}</select></div>`;
+    }
+    if (type === "textarea") {
+      return `<div class="p-ff${full}"><label>${label}</label><textarea id="${id}" placeholder="${opts.ph||''}"></textarea></div>`;
+    }
+    if (type === "checkboxes") {
+      return `<div class="p-ff full"><label>${label}</label><div class="p-checkbox-group" id="${id}">${opts.options.map(o=>`
+        <label class="p-checkbox-item"><input type="checkbox" value="${o}"> ${o}</label>
+      `).join("")}</div></div>`;
+    }
+    return `<div class="p-ff${full}"><label>${label}</label><input id="${id}" placeholder="${opts.ph||''}"></div>`;
+  }
+
+  function openEditForm(kod){
+    editingKod = kod || null;
+    const a = kod ? articles.find(x=>x.kod===kod) : {};
+    const kategoriOpts = ["Artikel Jurnal","Dasar/Dokumen Rasmi","Buku","Tesis/Disertasi","Prosiding/Persidangan","Laporan","Bab dalam Buku","Lain-lain"].map(v=>({v,l:v}));
+    const quartileOpts = [{v:"",l:"-"},{v:"Q1",l:"Q1"},{v:"Q2",l:"Q2"},{v:"Q3",l:"Q3"},{v:"Q4",l:"Q4"},{v:"Scopus",l:"Scopus"},{v:"WoS",l:"WoS"},{v:"preprint",l:"preprint"},{v:"tiada",l:"tiada"}];
+    const pdfOpts = [{v:"full",l:"PDF diperoleh"},{v:"part",l:"Sebahagian"},{v:"none",l:"Tiada PDF"}];
+    const tahapOpts = [{v:"",l:"-"},{v:"WAJIB",l:"WAJIB"},{v:"SOKONGAN",l:"SOKONGAN"},{v:"KONTEKS",l:"KONTEKS"}];
+    const kepOpts = [{v:"",l:"-"},{v:"Tinggi",l:"Tinggi"},{v:"Sederhana",l:"Sederhana"},{v:"Rendah",l:"Rendah"}];
+    const priorityOpts = [{v:"",l:"-"},{v:"1",l:"⭐ Simpan sahaja"},{v:"2",l:"⭐⭐ Kurang berkaitan"},{v:"3",l:"⭐⭐⭐ Sokongan"},{v:"4",l:"⭐⭐⭐⭐ Berkaitan"},{v:"5",l:"⭐⭐⭐⭐⭐ Sangat berkaitan dengan tesis"}];
+    const rekaBentukOpts = [{v:"",l:"-"},{v:"Kuantitatif",l:"Kuantitatif"},{v:"Kualitatif",l:"Kualitatif"},{v:"Mixed Method",l:"Mixed Method"}];
+    const warnaOpts = [{v:"",l:"-"},{v:"hijau",l:"🟢 Sangat Penting (wajib sitasi)"},{v:"kuning",l:"🟡 Penting"},{v:"biru",l:"🔵 Sokongan"},{v:"merah",l:"🔴 Tidak Relevan"}];
+    const bacaOpts = [{v:"Belum",l:"Belum Baca"},{v:"Sedang",l:"Sedang Baca"},{v:"Selesai",l:"Selesai Baca"}];
+    const peringkatOpts = [{v:"",l:"-"},{v:"Sekolah Rendah",l:"Sekolah Rendah"},{v:"Sekolah Menengah",l:"Sekolah Menengah"},{v:"Pra-Universiti",l:"Pra-Universiti"},{v:"IPT",l:"IPT"},{v:"Umum",l:"Umum"}];
+
+    $("#pEditContent").innerHTML = `
+      <h3 class="serif">${kod ? "Sunting Artikel" : "Tambah Artikel"}</h3>
+      <div class="p-form-grid">
+        ${fieldRow("Kod *","efKod","text",{ph:"cth S04-001"})}
+        ${fieldRow("Tahun *","efTahun","text",{ph:"2024"})}
+        ${fieldRow("Tajuk *","efTajuk","text",{full:true})}
+        ${fieldRow("Penulis (APA)","efPenulis","text",{full:true})}
+        ${fieldRow("Jurnal","efJurnal","text")}
+        ${fieldRow("Vol/Isu/ms","efVol","text")}
+        ${fieldRow("DOI","efDoi","text",{full:true})}
+        ${fieldRow("URL Rasmi Artikel","efUrl","text",{full:true,ph:"https://doi.org/... atau pautan rasmi penerbit"})}
+        ${fieldRow("Negara","efNegara","text",{ph:"Malaysia"})}
+        ${fieldRow("Peringkat Pendidikan","efPeringkat","select",{options:peringkatOpts})}
+        ${fieldRow("Kategori Sumber","efKategori","select",{options:kategoriOpts})}
+        ${fieldRow("Jenis","efJenis","text",{ph:"cth Eksperimen Kuasi"})}
+        ${fieldRow("Reka Bentuk Kajian","efRekaBentuk","select",{options:rekaBentukOpts})}
+        ${fieldRow("Quartile","efQuartile","select",{options:quartileOpts})}
+        ${fieldRow("Kata Kunci (pisah koma)","efKataKunci","text",{full:true,ph:"AI, motivasi, Sejarah"})}
+        ${fieldRow("Status PDF (auto ikut link di bawah)","efPdf","select",{options:pdfOpts})}
+        ${fieldRow("Link PDF (Google Drive / storan anda)","efGdrive","text",{full:true,ph:"https://drive.google.com/... — kosongkan jika belum ada, status akan jadi ❌ automatik"})}
+        ${fieldRow("Impak Faktor","efIF","text")}
+        ${fieldRow("Sampel","efSampel","text")}
+        ${fieldRow("Teori Asas (pisah |)","efTeori","text",{full:true,ph:"Vygotsky|Keller ARCS"})}
+        ${fieldRow("DV (bersandar)","efDv","text",{ph:"Pencapaian Sejarah"})}
+        ${fieldRow("IV (bebas)","efIv","text",{ph:"Laman Web Berintegrasi AI"})}
+        ${fieldRow("Mediator","efMed","text")}
+        ${fieldRow("Moderator","efMod","text")}
+        ${fieldRow("Objektif","efObj","text",{full:true})}
+        ${fieldRow("Persoalan Kajian (pisah |)","efPersoalan","textarea",{full:true,ph:"cth: Apakah kesan penggunaan laman web AI terhadap...?"})}
+        ${fieldRow("Kaedah","efKaedah","text",{full:true})}
+        ${fieldRow("Instrumen","efInstrumen","text",{full:true,ph:"cth Ujian pra-pasca, soal selidik motivasi"})}
+        ${fieldRow("Kaedah Analisis","efAnalisis","text",{full:true,ph:"cth ANCOVA, Ujian-t"})}
+        ${fieldRow("Dapatan (pisah |)","efDapatan","textarea",{full:true})}
+        ${fieldRow("Kelemahan Kajian (pisah |)","efKelemahan","textarea",{full:true,ph:"Limitasi yang dinyatakan penulis"})}
+        ${fieldRow("Cadangan Kajian Akan Datang (pisah |)","efCadangan","textarea",{full:true,ph:"Future research yang disyorkan penulis"})}
+        ${fieldRow("Kebaharuan (Novelty)","efNovelty","textarea",{full:true,ph:"Apa yang baharu tentang kajian ini"})}
+        ${fieldRow("Gap (pisah |)","efGap","textarea",{full:true})}
+        ${fieldRow("Kaitan Dengan Kajian","efKaitan","textarea",{full:true})}
+        ${fieldRow("Ayat Akademik Siap Guna","efAyat","textarea",{full:true})}
+        ${fieldRow("Petikan Penting / Idea Utama (pisah |, ringkas & patuh hak cipta)","efPetikan","textarea",{full:true,ph:"cth: Kajian ini menyokong penggunaan scaffolding dalam AI Tutor|..."})}
+        ${fieldRow("Digunakan Dalam Penulisan","efDigunakan","checkboxes",{options:DIGUNAKAN_OPTIONS})}
+        ${fieldRow("Bab Disokong (pisah koma)","efBab","text",{ph:"Bab 1, Bab 2"})}
+        ${fieldRow("RO (pisah koma)","efRo","text",{ph:"RO1, RO2"})}
+        ${fieldRow("Topik (pisah koma)","efTopik","text",{ph:"S04, S17"})}
+        ${fieldRow("Tahap Artikel","efTahapArtikel","select",{options:tahapOpts})}
+        ${fieldRow("Tahap Kepentingan","efKepentingan","select",{options:kepOpts})}
+        ${fieldRow("Prioriti Warna","efWarna","select",{options:warnaOpts})}
+        ${fieldRow("Status Bacaan","efBaca","select",{options:bacaOpts})}
+        ${fieldRow("Penarafan Artikel (Kaitan dengan Tesis)","efPriority","select",{options:priorityOpts})}
+        ${fieldRow("Nota","efNota","textarea",{full:true})}
+      </div>
+      <div class="p-modal-actions">
+        <button class="p-btn outline" id="pEditCancel">Batal</button>
+        <button class="p-btn gold" id="pEditSave">Simpan</button>
+      </div>
+    `;
+
+    if (a) {
+      $("#efKod").value = a.kod||""; $("#efTahun").value = a.tahun||""; $("#efTajuk").value = a.tajuk||"";
+      $("#efPenulis").value = a.penulis||""; $("#efJurnal").value = a.jurnal||""; $("#efVol").value = a.vol||"";
+      $("#efDoi").value = a.doi||""; $("#efUrl").value = a.urlRasmi||""; $("#efNegara").value = a.negara||"";
+      $("#efPeringkat").value = a.peringkatPendidikan||""; $("#efKategori").value = a.kategori||"Artikel Jurnal";
+      $("#efJenis").value = a.jenis||""; $("#efRekaBentuk").value = a.rekaBentukKajian||""; $("#efQuartile").value = a.quartile||"";
+      $("#efKataKunci").value = asArray(a.kataKunci).join(", ");
+      $("#efPdf").value = a.pdf||"full";
+      $("#efGdrive").value = a.gdrive||""; $("#efIF").value = a.impakFaktor||""; $("#efSampel").value = a.sampel||"";
+      $("#efTeori").value = asArray(a.teori).join("|"); $("#efDv").value = a.dv||""; $("#efIv").value = a.iv||"";
+      $("#efMed").value = a.mediator||""; $("#efMod").value = a.moderator||""; $("#efObj").value = a.obj||"";
+      $("#efPersoalan").value = asArray(a.persoalanKajian).join("|");
+      $("#efKaedah").value = a.kaedah||""; $("#efInstrumen").value = a.instrumen||""; $("#efAnalisis").value = a.kaedahAnalisis||"";
+      $("#efDapatan").value = asArray(a.dapatan).join("|");
+      $("#efKelemahan").value = asArray(a.kelemahanKajian).join("|");
+      $("#efCadangan").value = asArray(a.cadanganKajian).join("|");
+      $("#efNovelty").value = a.novelty||"";
+      $("#efGap").value = asArray(a.gap).join("|");
+      $("#efKaitan").value = a.kaitan||""; $("#efAyat").value = a.ayat||"";
+      $("#efPetikan").value = asArray(a.petikan).join("|");
+      const usedVals = asArray(a.digunakanDalam);
+      $$("input[type=checkbox]", $("#efDigunakan")).forEach(cb => { cb.checked = usedVals.includes(cb.value); });
+      $("#efBab").value = asArray(a.babDisokong).join(", "); $("#efRo").value = asArray(a.ro).join(", ");
+      $("#efTopik").value = asArray(a.topik).join(", "); $("#efTahapArtikel").value = a.tahapArtikel||"";
+      $("#efKepentingan").value = a.tahapKepentingan||""; $("#efWarna").value = a.prioritiWarna||"";
+      $("#efBaca").value = a.statusBacaan||"Belum"; $("#efPriority").value = a.priority||""; $("#efNota").value = a.nota||"";
+    }
+
+    $("#pEditCancel").addEventListener("click", closeEditForm);
+    $("#pEditSave").addEventListener("click", saveEditForm);
+    $("#efGdrive").addEventListener("input", () => {
+      const has = $("#efGdrive").value.trim();
+      if (!has) { $("#efPdf").value = "none"; }
+      else if ($("#efPdf").value === "none") { $("#efPdf").value = "full"; }
+    });
+    $("#pEditBg").classList.add("show");
+  }
+  function closeEditForm(){ $("#pEditBg").classList.remove("show"); editingKod = null; }
+
+  async function saveEditForm(){
+    const kod = $("#efKod").value.trim();
+    const tajuk = $("#efTajuk").value.trim();
+    if (!kod || !tajuk) { toast("Kod dan Tajuk wajib diisi."); return; }
+    const gdrive = $("#efGdrive").value.trim();
+    let pdf = $("#efPdf").value;
+    if (!gdrive) pdf = "none";
+    else if (!pdf || pdf === "none") pdf = "full";
+    const rec = {
+      kod, tajuk,
+      tahun: $("#efTahun").value.trim(), penulis: $("#efPenulis").value.trim(),
+      jurnal: $("#efJurnal").value.trim(), vol: $("#efVol").value.trim(), doi: $("#efDoi").value.trim(),
+      urlRasmi: $("#efUrl").value.trim(),
+      negara: $("#efNegara").value.trim(), peringkatPendidikan: $("#efPeringkat").value,
+      kategori: $("#efKategori").value, jenis: $("#efJenis").value.trim(), rekaBentukKajian: $("#efRekaBentuk").value,
+      quartile: $("#efQuartile").value, pdf, gdrive,
+      kataKunci: asArray($("#efKataKunci").value),
+      impakFaktor: $("#efIF").value.trim(), sampel: $("#efSampel").value.trim(),
+      teori: asArray($("#efTeori").value), dv: $("#efDv").value.trim(), iv: $("#efIv").value.trim(),
+      mediator: $("#efMed").value.trim(), moderator: $("#efMod").value.trim(), obj: $("#efObj").value.trim(),
+      persoalanKajian: asArray($("#efPersoalan").value),
+      kaedah: $("#efKaedah").value.trim(), instrumen: $("#efInstrumen").value.trim(), kaedahAnalisis: $("#efAnalisis").value.trim(),
+      dapatan: asArray($("#efDapatan").value),
+      kelemahanKajian: asArray($("#efKelemahan").value),
+      cadanganKajian: asArray($("#efCadangan").value),
+      novelty: $("#efNovelty").value.trim(),
+      gap: asArray($("#efGap").value),
+      kaitan: $("#efKaitan").value.trim(), ayat: $("#efAyat").value.trim(),
+      petikan: asArray($("#efPetikan").value),
+      digunakanDalam: $$("input[type=checkbox]:checked", $("#efDigunakan")).map(cb => cb.value),
+      babDisokong: asArray($("#efBab").value), ro: asArray($("#efRo").value), topik: asArray($("#efTopik").value),
+      tahapArtikel: $("#efTahapArtikel").value, tahapKepentingan: $("#efKepentingan").value,
+      prioritiWarna: $("#efWarna").value, statusBacaan: $("#efBaca").value || "Belum",
+      priority: $("#efPriority").value, nota: $("#efNota").value.trim()
+    };
+    const idx = articles.findIndex(x => x.kod === (editingKod || kod));
+    if (idx < 0) {
+      const dup = findDuplicate(rec, rec.kod);
+      if (dup) {
+        showConfirm(`Artikel dengan tajuk & tahun serupa sudah wujud (${dup.kod} — ${dup.tajuk}). Tambah juga sebagai entri berasingan?`, async () => {
+          articles.push(rec);
+          await saveData();
+          closeEditForm();
+          renderStats();
+          if (activeTab === "database") renderDatabase();
+          toast("Artikel ditambah.");
+        });
+        return;
+      }
+      articles.push(rec);
+    } else {
+      articles[idx] = rec;
+    }
+    await saveData();
+    closeEditForm();
+    renderStats();
+    if (activeTab === "database") renderDatabase();
+    toast(idx >= 0 ? "Artikel dikemas kini." : "Artikel ditambah.");
+  }
+
+  /* ---------- BAB WRITER ---------- */
+  function renderBabWriter(){
+    refreshTemaFilterSelect();
+    const sel = $("#pBwTema");
+    const tema = sel.value;
+    const sortBy = $("#pBwSort").value;
+    const wrap = $("#pBwWrap");
+
+    if (!tema) {
+      wrap.innerHTML = `<div class="p-empty"><div class="big">&#128218;</div>Pilih subtopik di atas untuk lihat artikel berkaitan.</div>`;
+      return;
+    }
+    let list = articles.filter(a => asArray(a.topik).includes(tema));
+    if (!list.length) {
+      wrap.innerHTML = `<div class="p-empty"><div class="big">&#128269;</div>Tiada artikel untuk subtopik ini lagi.</div>`;
+      return;
+    }
+    const order = {WAJIB:0, SOKONGAN:1, KONTEKS:2, undefined:3};
+    if (sortBy === "tahap") list.sort((a,b)=> (order[a.tahapArtikel]??3) - (order[b.tahapArtikel]??3) || (parseInt(b.tahun)||0)-(parseInt(a.tahun)||0));
+    else if (sortBy === "tahun") list.sort((a,b)=> (parseInt(b.tahun)||0)-(parseInt(a.tahun)||0));
+    else if (sortBy === "negara") list.sort((a,b)=> ((b.negara||"").toLowerCase().includes("malaysia")?1:0) - ((a.negara||"").toLowerCase().includes("malaysia")?1:0));
+    else if (sortBy === "priority") list.sort((a,b)=> (parseInt(b.priority)||0)-(parseInt(a.priority)||0));
+
+    wrap.innerHTML = `<div class="p-bw-group">
+      <div class="p-bw-group-head serif">${tema} — ${escapeHtml(TEMA_MAP[tema])} (${list.length} artikel)</div>
+      ${list.map(a => `<div class="p-bw-card${a.tahapArtikel==='WAJIB'?' wajib':''}">
+        <div class="p-bw-top"><span class="p-bw-title">${escapeHtml(a.tajuk||'-')}</span>${tahapBadge(a.tahapArtikel)}</div>
+        <div class="p-bw-meta">${escapeHtml(a.penulis||'-')} (${escapeHtml(a.tahun||'-')}) &middot; ${priorityStars(a.priority)}</div>
+        ${a.ayat ? `<div class="p-bw-ayat">${escapeHtml(a.ayat)}</div>` : ''}
+        <div style="margin-top:6px"><button class="p-btn outline small p-bw-copy" data-ayat="${escapeHtml(a.ayat||'')}">Salin Ayat</button></div>
+      </div>`).join("")}
+    </div>`;
+    $$(".p-bw-copy", wrap).forEach(btn => btn.addEventListener("click", () => { copyText(btn.dataset.ayat); toast("Ayat disalin."); }));
+  }
+
+  /* ---------- THESIS MATRIX ---------- */
+  function renderMatrix(){
+    const covWrap = $("#pCovWrap");
+    const roCounts = ROS.map(r => ({...r, count: articles.filter(a=>asArray(a.ro).includes(r.k)).length}));
+    const babCounts = BAB_LIST.map(b => ({b, count: articles.filter(a=>asArray(a.babDisokong).includes(b)).length}));
+    const qCounts = {};
+    articles.forEach(a => { const q = a.quartile||"tiada"; qCounts[q] = (qCounts[q]||0)+1; });
+
+    covWrap.innerHTML = `
+      <div class="p-cov-card"><div class="p-cov-title">Liputan RO</div>
+        ${roCounts.map(r=>`<div class="p-cov-item"><span>${r.k} ${escapeHtml(r.n)}</span><b>${r.count}</b></div>`).join("")}
+      </div>
+      <div class="p-cov-card"><div class="p-cov-title">Liputan Bab</div>
+        ${babCounts.map(b=>`<div class="p-cov-item"><span>${b.b}</span><b>${b.count}</b></div>`).join("")}
+      </div>
+      <div class="p-cov-card"><div class="p-cov-title">Pecahan Quartile</div>
+        ${Object.keys(qCounts).map(q=>`<div class="p-cov-item"><span>${escapeHtml(q)}</span><b>${qCounts[q]}</b></div>`).join("") || '<div class="p-cov-item">Tiada data</div>'}
+      </div>
+    `;
+
+    const table = $("#pMatrixTable");
+    if (!articles.length) { table.innerHTML = `<tr><td class="p-empty">Tiada artikel lagi.</td></tr>`; return; }
+    table.innerHTML = `<thead><tr><th style="text-align:left">Kod</th>${ROS.map(r=>`<th>${r.k}</th>`).join("")}${BAB_LIST.map(b=>`<th>${b.replace('Bab ','B')}</th>`).join("")}<th>Quartile</th></tr></thead>
+      <tbody>${articles.map(a => `<tr>
+        <td class="left mono">${escapeHtml(a.kod||'-')}</td>
+        ${ROS.map(r => `<td>${asArray(a.ro).includes(r.k) ? '<span class="p-tick">&#10003;</span>' : '<span class="p-cross">&middot;</span>'}</td>`).join("")}
+        ${BAB_LIST.map(b => `<td>${asArray(a.babDisokong).includes(b) ? '<span class="p-tick">&#10003;</span>' : '<span class="p-cross">&middot;</span>'}</td>`).join("")}
+        <td>${escapeHtml(a.quartile||'-')}</td>
+      </tr>`).join("")}</tbody>`;
+  }
+
+  /* ---------- EVIDENCE MAP ---------- */
+  function renderEvidence(){
+    const table = $("#pEvidenceTable");
+    if (!articles.length) { table.innerHTML = `<tr><td class="p-empty">Tiada artikel lagi.</td></tr>`; return; }
+    table.innerHTML = `<thead><tr><th style="text-align:left">Kod</th><th style="text-align:left">Teori</th><th style="text-align:left">DV</th><th style="text-align:left">IV</th><th style="text-align:left">Mediator</th><th style="text-align:left">Moderator</th></tr></thead>
+      <tbody>${articles.map(a => `<tr>
+        <td class="left mono">${escapeHtml(a.kod||'-')}</td>
+        <td class="left">${asArray(a.teori).map(t=>`<span class="p-theochip">${escapeHtml(t)}</span>`).join(' ') || '-'}</td>
+        <td class="left">${a.dv ? `<span class="p-varchip-dv">${escapeHtml(a.dv)}</span>` : '-'}</td>
+        <td class="left">${a.iv ? `<span class="p-varchip-iv">${escapeHtml(a.iv)}</span>` : '-'}</td>
+        <td class="left">${a.mediator ? `<span class="p-varchip-med">${escapeHtml(a.mediator)}</span>` : '-'}</td>
+        <td class="left">${a.moderator ? `<span class="p-varchip-mod">${escapeHtml(a.moderator)}</span>` : '-'}</td>
+      </tr>`).join("")}</tbody>`;
+  }
+
+  /* ---------- CITATION BANK ---------- */
+  function renderCitation(){
+    const mode = $("#pCitMode").value;
+    const wrap = $("#pCitWrap");
+    let groups = {};
+    if (mode === "topik") {
+      articles.forEach(a => asArray(a.topik).forEach(t => { (groups[t] = groups[t]||[]).push(a); }));
+    } else if (mode === "teori") {
+      articles.forEach(a => asArray(a.teori).forEach(t => { (groups[t] = groups[t]||[]).push(a); }));
+    } else {
+      articles.forEach(a => {
+        [["DV",a.dv],["IV",a.iv],["Mediator",a.mediator],["Moderator",a.moderator]].forEach(([lbl,v]) => {
+          if (v) { const key = `${lbl}: ${v}`; (groups[key] = groups[key]||[]).push(a); }
+        });
+      });
+    }
+    let keys = Object.keys(groups);
+    if (citFilter) {
+      const s = citFilter.toLowerCase();
+      keys = keys.filter(k => k.toLowerCase().includes(s) || (mode==="topik" && (TEMA_MAP[k]||"").toLowerCase().includes(s)));
+    }
+    if (!keys.length) { wrap.innerHTML = `<div class="p-empty"><div class="big">&#128172;</div>Tiada sitasi ditemui.</div>`; return; }
+    keys.sort();
+    wrap.innerHTML = keys.map(k => {
+      const label = mode === "topik" ? `${k} — ${TEMA_MAP[k]||''}` : k;
+      return `<div class="p-cit-group">
+        <div class="p-cit-head">${escapeHtml(label)} (${groups[k].length})</div>
+        ${groups[k].filter(a=>a.ayat || asArray(a.petikan).length).map(a => `<div class="p-cit-item" style="flex-direction:column;align-items:stretch">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+            <span>${a.ayat ? escapeHtml(a.ayat) : '<span style="color:var(--ink-soft);font-style:italic">Tiada ayat siap guna</span>'} <span style="color:var(--ink-soft);font-size:10.5px">(${escapeHtml(a.kod||'')})</span></span>
+            ${a.ayat ? `<button class="p-btn outline small p-cit-copy" data-ayat="${escapeHtml(a.ayat)}">Salin</button>` : ''}
+          </div>
+          ${asArray(a.petikan).length ? asArray(a.petikan).map(q=>`<div class="p-quote-item">&#8220;${escapeHtml(q)}&#8221;</div>`).join("") : ''}
+        </div>`).join("") || '<div style="font-size:11.5px;color:var(--ink-soft);padding:4px 10px">Tiada ayat/petikan direkodkan.</div>'}
+      </div>`;
+    }).join("");
+    $$(".p-cit-copy", wrap).forEach(btn => btn.addEventListener("click", () => { copyText(btn.dataset.ayat); toast("Ayat disalin."); }));
+  }
+
+  /* ---------- GAP BANK ---------- */
+  function renderGap(){
+    $("#pNoveltyBox").innerHTML = `<h3 class="serif">Kesignifikanan Kajian</h3>
+      <p>Setakat sorotan literatur yang dijalankan, jurang kajian di bawah membantu mengukuhkan justifikasi keperluan kajian ini terhadap kesan laman web berintegrasi AI ke atas pencapaian, motivasi dan penglibatan murid berprestasi rendah dalam mata pelajaran Sejarah.</p>`;
+    let gaps = [];
+    articles.forEach(a => asArray(a.gap).forEach(g => gaps.push({gap:g, kod:a.kod, tajuk:a.tajuk})));
+    if (gapFilter) {
+      const s = gapFilter.toLowerCase();
+      gaps = gaps.filter(g => g.gap.toLowerCase().includes(s));
+    }
+    const wrap = $("#pGapWrap");
+    if (!gaps.length) {
+      wrap.innerHTML = `<div class="p-empty"><div class="big">&#128269;</div>Tiada gap direkodkan lagi.</div>`;
+      return;
+    }
+    wrap.innerHTML = gaps.map(g => `<div class="p-gap-item">${escapeHtml(g.gap)}<div class="p-gap-src">${escapeHtml(g.kod||'')} — ${escapeHtml(g.tajuk||'')}</div></div>`).join("");
+  }
+
+  /* ---------- TEMA ---------- */
+  function renderTema(){
+    $("#pTema00Note p").textContent = TEMA_00_NOTE.guna;
+    $("#pTema00Folders").innerHTML = TEMA_00_NOTE.folders.map(f => `
+      <div class="p-org-folder">
+        <div class="org-name">${escapeHtml(f.org)}</div>
+        <ul>${f.items.map(i=>`<li>${escapeHtml(i)}</li>`).join("")}</ul>
+      </div>
+    `).join("");
+    $("#pTema00BabList").innerHTML = TEMA_00_NOTE.bab.map(b => `
+      <div style="min-width:150px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-weight:700;color:var(--info);font-size:11px;margin-bottom:3px">${b.b}</div>
+        <ul style="margin:0;padding-left:16px;font-size:11px;color:var(--ink);line-height:1.6">
+          ${b.items.map(i=>`<li>${escapeHtml(i)}</li>`).join("")}
+        </ul>
+      </div>
+    `).join("");
+
+    $("#pTema00PriorityList").innerHTML = PRIORITY_S00_DOCS.length ? PRIORITY_S00_DOCS.map(doc => {
+      const found = articles.some(a => normalizeTitle(a.tajuk).includes((doc.kw||"").toLowerCase()));
+      return `<div class="p-priority-item ${found?'done':'pending'}">
+        <span><b>${escapeHtml(doc.org||'-')}</b> — ${escapeHtml(doc.tajuk||'-')} ${doc.tahun?`(${escapeHtml(doc.tahun)})`:''}</span>
+        <span class="p-priority-stat ${found?'done':'pending'}">${found ? '&#10003; Sudah diimport' : 'Belum diimport'}</span>
+      </div>`;
+    }).join("") : `<div style="font-size:11.5px;color:var(--ink-soft)">Tiada dokumen dalam senarai lagi. Klik "Urus Senarai" untuk tambah.</div>`;
+
+    const counts = {};
+    Object.keys(TEMA_MAP).forEach(c => counts[c] = []);
+    articles.forEach(a => asArray(a.topik).forEach(t => { if (counts[t]) counts[t].push(a); }));
+    const max = Math.max(1, ...Object.values(counts).map(v=>v.length));
+
+    $("#pTemaWrap").innerHTML = Object.keys(TEMA_MAP).map(code => {
+      const list = counts[code];
+      const pct = Math.round((list.length/max)*100);
+      return `<div class="p-tema-row">
+        <div class="p-tema-top"><span><span class="p-tema-code">${code}</span> ${escapeHtml(TEMA_MAP[code])}</span><span>${list.length}</span></div>
+        <div class="p-tema-bar-bg"><div class="p-tema-bar-fill" style="width:${pct}%"></div></div>
+        ${list.length ? `<details class="p-tema-list"><summary>Lihat ${list.length} artikel</summary>${list.map(a=>`&bull; ${escapeHtml(a.kod||'')} — ${escapeHtml(a.tajuk||'')}`).join("<br>")}</details>` : ''}
+      </div>`;
+    }).join("");
+  }
+
+  /* ---------- SINTESIS AUTO ---------- */
+  function renderSintesis(){
+    const type = $("#pSynType").value;
+    const wrap = $("#pSynWrap");
+    if (!articles.length) { wrap.innerHTML = `<div class="p-empty"><div class="big">&#128203;</div>Tiada artikel untuk disintesis lagi.</div>`; return; }
+
+    if (type === "compare") {
+      const cols = [
+        {k:"eksperimen", l:"Reka Bentuk Eksperimen", test:a => /eksperimen|kuasi|rct/i.test(a.jenis||"")},
+        {k:"pencapaian", l:"Ukur Pencapaian", test:a => asArray(a.topik).includes("S16")},
+        {k:"motivasi", l:"Ukur Motivasi", test:a => asArray(a.topik).includes("S17")},
+        {k:"penglibatan", l:"Ukur Penglibatan", test:a => asArray(a.topik).includes("S18")},
+        {k:"ai", l:"Laman Web / AI", test:a => asArray(a.topik).some(t=>["S04","S05","S08","S09","S10","S11"].includes(t))},
+        {k:"rendah", l:"Murid Berprestasi Rendah", test:a => asArray(a.topik).includes("S03")},
+        {k:"malaysia", l:"Konteks Malaysia", test:a => (a.negara||"").toLowerCase().includes("malaysia")}
+      ];
+      wrap.innerHTML = `<table class="p-matrix"><thead><tr><th style="text-align:left">Kajian</th>${cols.map(c=>`<th>${c.l}</th>`).join("")}</tr></thead>
+        <tbody>${articles.map(a => `<tr>
+          <td class="left">${escapeHtml(a.penulis||a.kod||'-')} (${escapeHtml(a.tahun||'-')})</td>
+          ${cols.map(c => `<td>${c.test(a) ? '<span class="p-tick">&#10003;</span>' : '<span class="p-cross">&middot;</span>'}</td>`).join("")}
+        </tr>`).join("")}</tbody></table>`;
+    } else {
+      const rows = Object.keys(TEMA_MAP).map(code => {
+        const list = articles.filter(a => asArray(a.topik).includes(code));
+        if (!list.length) return null;
+        const dapatan = list.slice(0,3).map(a => asArray(a.dapatan)[0]).filter(Boolean).join(" ");
+        const gap = list.slice(0,3).map(a => asArray(a.gap)[0]).filter(Boolean).join(" ");
+        const implikasi = list.slice(0,2).map(a => a.kaitan).filter(Boolean).join(" ");
+        return {code, n: list.length, dapatan, gap, implikasi};
+      }).filter(Boolean);
+      wrap.innerHTML = `<table class="p-matrix"><thead><tr><th style="text-align:left">Tema</th><th>Bil.</th><th style="text-align:left">Dapatan Utama</th><th style="text-align:left">Gap</th><th style="text-align:left">Implikasi kepada Kajian</th></tr></thead>
+        <tbody>${rows.map(r => `<tr>
+          <td class="left"><b>${r.code}</b> ${escapeHtml(TEMA_MAP[r.code])}</td>
+          <td>${r.n}</td>
+          <td class="left" style="max-width:220px">${escapeHtml(r.dapatan)||'-'}</td>
+          <td class="left" style="max-width:200px">${escapeHtml(r.gap)||'-'}</td>
+          <td class="left" style="max-width:200px">${escapeHtml(r.implikasi)||'-'}</td>
+        </tr>`).join("")}</tbody></table>`;
+    }
+  }
+
+  /* ---------- APA 7 ---------- */
+  function apaString(a){
+    let s = `${a.penulis||'[Pengarang]'} (${a.tahun||'t.t.'}). ${a.tajuk||''}.`;
+    if (a.jurnal) s += ` ${a.jurnal}`;
+    if (a.vol) s += `, ${a.vol}`;
+    s = s.trim();
+    if (!s.endsWith(".")) s += ".";
+    if (a.doi) s += ` ${a.doi}`;
+    return s;
+  }
+  function renderApa(){
+    const wrap = $("#pApaWrap");
+    if (!articles.length) {
+      wrap.innerHTML = `<div class="p-empty"><div class="big">&#128220;</div>Belum ada sitasi.</div>`;
+      return;
+    }
+    const sorted = articles.slice().sort((a,b)=>(a.penulis||"").localeCompare(b.penulis||""));
+    wrap.innerHTML = sorted.map(a => `<div class="p-apa-item">${escapeHtml(apaString(a))}</div>`).join("");
+  }
+
+  function copyText(text){
+    navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(text).catch(()=>fallbackCopy(text)) : fallbackCopy(text);
+  }
+  function fallbackCopy(text){
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); } catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  function normalizeArticle(obj){
+    const a = Object.assign({}, obj);
+    ["topik","teori","dapatan","gap","babDisokong","ro","petikan","digunakanDalam","kataKunci","persoalanKajian","kelemahanKajian","cadanganKajian"].forEach(k => { if (typeof a[k] === "string") a[k] = asArray(a[k]); });
+    if (!a.statusBacaan) a.statusBacaan = "Belum";
+    if (!a.kod) a.kod = "S" + Math.floor(1000 + Math.random()*9000);
+    if (!a.kategori) a.kategori = "Artikel Jurnal";
+    // PDF status is always derived from whether a saved link actually exists —
+    // never trust an AI-guessed status without a real link behind it.
+    const hasLink = a.gdrive && String(a.gdrive).trim();
+    if (!hasLink) a.pdf = "none";
+    else if (!a.pdf || a.pdf === "none") a.pdf = "full";
+    return a;
+  }
+
+  function isRelevant(a){
+    return asArray(a.topik).some(t => TEMA_MAP.hasOwnProperty(t));
+  }
+  function normalizeTitle(s){
+    return (s||"").toLowerCase().trim().replace(/[^\w\s]/g,"").replace(/\s+/g," ");
+  }
+  function findDuplicate(norm, excludeKod){
+    const nt = normalizeTitle(norm.tajuk);
+    if (!nt) return null;
+    return articles.find(a => {
+      if (a.kod === excludeKod) return false;
+      if (norm.doi && a.doi && norm.doi.trim().toLowerCase() === a.doi.trim().toLowerCase()) return true;
+      const at = normalizeTitle(a.tajuk);
+      return at && at === nt && String(a.tahun||"") === String(norm.tahun||"");
+    }) || null;
+  }
+  function renderRejected(list){
+    const wrap = $("#pRejectedWrap");
+    if (!list.length) { wrap.innerHTML = ""; return; }
+    wrap.innerHTML = `<div class="p-rejected-wrap">
+      <div class="p-rejected-head">&#10007; ${list.length} artikel ditolak (tidak berkaitan / tidak lengkap)</div>
+      ${list.map(r => `<div class="p-rejected-item">
+        <div class="rt">${escapeHtml(r.kod||'-')} — ${escapeHtml(r.tajuk||'(tiada tajuk)')}</div>
+        <div class="rs">${escapeHtml(r.sebab||'Tidak berkaitan dengan kajian.')}</div>
+      </div>`).join("")}
+    </div>`;
+  }
+  function renderDuplicates(list){
+    const wrap = $("#pDuplicateWrap");
+    if (!list.length) { wrap.innerHTML = ""; return; }
+    wrap.innerHTML = `<div class="p-rejected-wrap">
+      <div class="p-rejected-head" style="color:#8E6423">&#9888; ${list.length} artikel dilangkau (kemungkinan pendua)</div>
+      ${list.map(r => `<div class="p-rejected-item" style="background:#F3E6C8;border-color:#E0C88A;border-left-color:#8E6423">
+        <div class="rt">${escapeHtml(r.kod||'-')} — ${escapeHtml(r.tajuk||'(tiada tajuk)')}</div>
+        <div class="rs" style="color:#6B4F0F">Tajuk &amp; tahun sepadan dengan artikel sedia ada: <b>${escapeHtml(r.existing)}</b>. Tidak ditambah automatik untuk elak pendua. Jika ini sebenarnya artikel berbeza, tambah secara manual dan ubah kod/tajuk.</div>
+      </div>`).join("")}
+    </div>`;
+  }
+
+  async function importJson(){
+    const raw = $("#pJsonInput").value.trim();
+    const msg = $("#pImportMsg");
+    msg.className = "p-msg"; msg.style.display = "none";
+    $("#pRejectedWrap").innerHTML = ""; $("#pDuplicateWrap").innerHTML = "";
+    if (!raw) { msg.className = "p-msg err"; msg.textContent = "Sila tampal JSON dahulu."; return; }
+    let parsed;
+    try { parsed = JSON.parse(raw); }
+    catch(e) { msg.className = "p-msg err"; msg.textContent = "JSON tidak sah: " + e.message; return; }
+    const list = Array.isArray(parsed) ? parsed : [parsed];
+    let added = 0, updated = 0;
+    const rejected = [];
+    const duplicates = [];
+
+    list.forEach(item => {
+      if (item && item.tolak === true) {
+        rejected.push({ kod: item.kod, tajuk: item.tajuk, sebab: item.sebab || "Ditandakan tidak berkaitan oleh Claude." });
+        return;
+      }
+      const norm = normalizeArticle(item);
+      if (!norm.tajuk || !norm.tajuk.trim()) {
+        rejected.push({ kod: norm.kod, tajuk: "", sebab: "Medan tajuk tidak lengkap." });
+        return;
+      }
+      if (!isRelevant(norm)) {
+        rejected.push({ kod: norm.kod, tajuk: norm.tajuk, sebab: "Tiada topik berkaitan kajian dikesan (subtopik S00–S19 kosong/tidak sah) — artikel dianggap tidak berkaitan." });
+        return;
+      }
+      const idx = articles.findIndex(a => a.kod === norm.kod);
+      if (idx >= 0) { articles[idx] = norm; updated++; return; }
+      const dup = findDuplicate(norm, norm.kod);
+      if (dup) {
+        duplicates.push({ kod: norm.kod, tajuk: norm.tajuk, existing: dup.kod });
+        return;
+      }
+      articles.push(norm); added++;
+    });
+
+    await saveData();
+    renderStats();
+    const parts = [];
+    if (added) parts.push(`${added} artikel baharu ditambah`);
+    if (updated) parts.push(`${updated} dikemas kini`);
+    if (duplicates.length) parts.push(`${duplicates.length} dilangkau (pendua)`);
+    if (rejected.length) parts.push(`${rejected.length} ditolak (tidak berkaitan)`);
+    if (parts.length) {
+      msg.className = (added || updated) ? "p-msg ok" : "p-msg err";
+      msg.textContent = parts.join(", ") + ".";
+    } else {
+      msg.className = "p-msg err";
+      msg.textContent = "Tiada artikel dikesan dalam JSON.";
+    }
+    renderRejected(rejected);
+    renderDuplicates(duplicates);
+    $("#pJsonInput").value = "";
+    if (activeTab === "database") renderDatabase();
+  }
+
+  /* ---------- ANALYTICS ---------- */
+  function openAnalytics(){ renderAnalyticsModal(); $("#pAnalyticsBg").classList.add("show"); }
+  function closeAnalytics(){ $("#pAnalyticsBg").classList.remove("show"); }
+  function renderAnalyticsModal(){
+    const total = articles.length;
+    const malaysia = articles.filter(a=>(a.negara||"").toLowerCase().includes("malaysia")).length;
+    const intl = total - malaysia;
+    const pdfFull = articles.filter(a=>a.pdf==="full").length;
+    const pdfPart = articles.filter(a=>a.pdf==="part").length;
+    const pdfNone = total - pdfFull - pdfPart;
+    const tahapCounts = {WAJIB:0, SOKONGAN:0, KONTEKS:0, "Tiada label":0};
+    articles.forEach(a => { const t = a.tahapArtikel && tahapCounts.hasOwnProperty(a.tahapArtikel) ? a.tahapArtikel : "Tiada label"; tahapCounts[t]++; });
+    const kepCounts = {Tinggi:0, Sederhana:0, Rendah:0, "Tiada label":0};
+    articles.forEach(a => { const k = a.tahapKepentingan && kepCounts.hasOwnProperty(a.tahapKepentingan) ? a.tahapKepentingan : "Tiada label"; kepCounts[k]++; });
+    const qCounts = {};
+    articles.forEach(a => { const q = a.quartile || "tiada"; qCounts[q] = (qCounts[q]||0)+1; });
+    const yearCounts = {};
+    articles.forEach(a => { const y = a.tahun || "-"; yearCounts[y] = (yearCounts[y]||0)+1; });
+    const years = Object.keys(yearCounts).sort();
+    const roCounts = ROS.map(r => ({...r, count: articles.filter(a=>asArray(a.ro).includes(r.k)).length}));
+    const babCounts = BAB_LIST.map(b => ({b, count: articles.filter(a=>asArray(a.babDisokong).includes(b)).length}));
+    const temaCounts = Object.keys(TEMA_MAP).map(c => ({c, n:TEMA_MAP[c], count: articles.filter(a=>asArray(a.topik).includes(c)).length})).sort((a,b)=>a.count-b.count);
+    const totalGaps = articles.reduce((s,a)=>s+asArray(a.gap).length, 0);
+    const usedCount = articles.filter(a => asArray(a.digunakanDalam).length > 0).length;
+    const unusedCount = total - usedCount;
+    const usedBreakdown = DIGUNAKAN_OPTIONS.map(opt => ({opt, count: articles.filter(a => asArray(a.digunakanDalam).includes(opt)).length}));
+
+    $("#pAnalyticsContent").innerHTML = `
+      <h3 class="serif">Analitik Pangkalan Literatur</h3>
+      <div class="p-cov-row">
+        <div class="p-cov-card"><div class="p-cov-title">Ringkasan</div>
+          <div class="p-cov-item"><span>Jumlah Artikel</span><b>${total}</b></div>
+          <div class="p-cov-item"><span>Malaysia</span><b>${malaysia}</b></div>
+          <div class="p-cov-item"><span>Antarabangsa</span><b>${intl}</b></div>
+          <div class="p-cov-item"><span>Jumlah Gap Direkod</span><b>${totalGaps}</b></div>
+        </div>
+        <div class="p-cov-card"><div class="p-cov-title">Status PDF</div>
+          <div class="p-cov-item"><span>Penuh</span><b>${pdfFull}</b></div>
+          <div class="p-cov-item"><span>Sebahagian</span><b>${pdfPart}</b></div>
+          <div class="p-cov-item"><span>Tiada</span><b>${pdfNone}</b></div>
+        </div>
+        <div class="p-cov-card"><div class="p-cov-title">Tahap Artikel</div>
+          ${Object.keys(tahapCounts).map(k=>`<div class="p-cov-item"><span>${escapeHtml(k)}</span><b>${tahapCounts[k]}</b></div>`).join("")}
+        </div>
+        <div class="p-cov-card"><div class="p-cov-title">Status Digunakan</div>
+          <div class="p-cov-item"><span>Sudah digunakan</span><b style="color:var(--success)">${usedCount}</b></div>
+          <div class="p-cov-item"><span>Belum digunakan</span><b style="color:#8E6423">${unusedCount}</b></div>
+        </div>
+      </div>
+      <div class="p-cov-row">
+        <div class="p-cov-card"><div class="p-cov-title">Tahap Kepentingan</div>
+          ${Object.keys(kepCounts).map(k=>`<div class="p-cov-item"><span>${escapeHtml(k)}</span><b>${kepCounts[k]}</b></div>`).join("")}
+        </div>
+        <div class="p-cov-card"><div class="p-cov-title">Liputan RO</div>
+          ${roCounts.map(r=>`<div class="p-cov-item"><span>${r.k}</span><b>${r.count}</b></div>`).join("")}
+        </div>
+        <div class="p-cov-card"><div class="p-cov-title">Liputan Bab</div>
+          ${babCounts.map(b=>`<div class="p-cov-item"><span>${b.b}</span><b>${b.count}</b></div>`).join("")}
+        </div>
+      </div>
+      <div class="p-cov-title" style="margin:10px 0 6px">Status Penggunaan (Digunakan Dalam)</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">${usedBreakdown.map(b=>`<span class="p-badge${b.count?' negara-my':''}">${escapeHtml(b.opt)}: ${b.count}</span>`).join("")}</div>
+      <div class="p-cov-title" style="margin:10px 0 6px">Pecahan Quartile</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">${Object.keys(qCounts).map(q=>`<span class="p-badge">${escapeHtml(q)}: ${qCounts[q]}</span>`).join("") || '<span style="font-size:11px;color:var(--ink-soft)">Tiada data</span>'}</div>
+      <div class="p-cov-title" style="margin:10px 0 6px">Taburan Tahun</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">${years.map(y=>`<span class="p-badge">${escapeHtml(y)}: ${yearCounts[y]}</span>`).join("") || '<span style="font-size:11px;color:var(--ink-soft)">Tiada data</span>'}</div>
+      <div class="p-cov-title" style="margin:10px 0 6px">Tema Paling Kurang Liputan (utamakan bacaan)</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${temaCounts.slice(0,5).map(t=>`<span class="p-badge kep-rendah">${t.c}: ${t.count}</span>`).join("") || '<span style="font-size:11px;color:var(--ink-soft)">Tiada data</span>'}</div>
+      <div class="p-modal-actions"><button class="p-btn outline" id="pAnalyticsClose">Tutup</button></div>
+    `;
+    $("#pAnalyticsClose").addEventListener("click", closeAnalytics);
+  }
+
+  /* ---------- AUTOSAVE INFO ---------- */
+  function openAutosaveInfo(){ renderAutosaveModal(); $("#pAutosaveBg").classList.add("show"); }
+  function closeAutosaveInfo(){ $("#pAutosaveBg").classList.remove("show"); }
+  function renderAutosaveModal(){
+    const raw = JSON.stringify(articles);
+    const kb = (raw.length/1024).toFixed(1);
+    const savedText = lastSavedAt ? lastSavedAt.toLocaleString("ms-MY") : "Belum ada perubahan sejak dibuka";
+    $("#pAutosaveContent").innerHTML = `
+      <h3 class="serif">Status Auto-Save</h3>
+      <div class="p-field"><div class="lbl">Status</div><div class="val" style="color:var(--success);font-weight:600">&#10003; Auto-save AKTIF</div></div>
+      <p style="font-size:12px;color:var(--ink-soft);line-height:1.6;margin:6px 0 12px">Data anda disimpan automatik setiap kali artikel ditambah, disunting atau dipadam, dalam storan khusus perbualan Claude ini. Data kekal walaupun artifact ditutup atau dibuka semula dalam perbualan yang sama.</p>
+      <div class="p-field"><div class="lbl">Jumlah Artikel</div><div class="val">${articles.length}</div></div>
+      <div class="p-field"><div class="lbl">Anggaran Saiz Data</div><div class="val">${kb} KB</div></div>
+      <div class="p-field"><div class="lbl">Simpanan Terakhir</div><div class="val">${escapeHtml(savedText)}</div></div>
+      <div style="background:var(--paper-alt);border-radius:6px;padding:9px 11px;font-size:11.5px;color:var(--ink-soft);margin-top:8px">
+        <b style="color:var(--maroon)">Penting:</b> Untuk akses data dari perbualan atau peranti lain, guna <b>Backup</b> untuk muat turun JSON, kemudian <b>Import Backup</b> di lokasi baharu.
+      </div>
+      <div class="p-modal-actions">
+        <button class="p-btn danger small" id="pAutosaveClear">Padam Semua Data</button>
+        <button class="p-btn outline" id="pAutosaveClose">Tutup</button>
+      </div>
+    `;
+    $("#pAutosaveClose").addEventListener("click", closeAutosaveInfo);
+    $("#pAutosaveClear").addEventListener("click", () => { closeAutosaveInfo(); $("#pClearAllBtn").click(); });
+  }
+
+  /* ---------- GOOGLE SHEETS SYNC ---------- */
+  function openSyncModal(){
+    if (gasUrl) { $("#pGasUrlDisplay").textContent = gasUrl; $("#pGasUrlInput").value = gasUrl; goSyncStep(3); }
+    else goSyncStep(1);
+    $("#pSyncBg").classList.add("show");
+  }
+  function closeSyncModal(){ $("#pSyncBg").classList.remove("show"); }
+  function goSyncStep(n){
+    [1,2,3].forEach(i => {
+      $("#pSyncStep"+i).style.display = (i===n) ? "block" : "none";
+      $("#pSyncInd"+i).classList.toggle("off", i!==n);
+    });
+  }
+  function copyGasCode(){ copyText($("#pGasCode").textContent); toast("Kod Apps Script disalin."); }
+  async function saveGasUrlInput(){
+    const url = $("#pGasUrlInput").value.trim();
+    if (!url || !url.includes("script.google.com")) { toast("URL tidak sah. Pastikan URL bermula dengan https://script.google.com/macros/s/"); return; }
+    gasUrl = url;
+    await persistGasUrl(url);
+    $("#pGasUrlDisplay").textContent = url;
+    goSyncStep(3);
+    toast("URL disimpan.");
+  }
+  function testSyncConn(){
+    if (!gasUrl) { toast("Sila simpan URL dahulu."); return; }
+    $("#pSyncStatus").textContent = "Menguji sambungan...";
+    fetch(gasUrl).then(r=>r.json()).then(() => {
+      $("#pSyncStatus").innerHTML = '<span style="color:#0F6E56">&#10003; Sambungan berjaya! Apps Script aktif.</span>';
+    }).catch(e => {
+      $("#pSyncStatus").innerHTML = '<span style="color:var(--danger)">&#10007; Gagal: '+escapeHtml(e.message)+'. Semak URL dan cuba deploy semula.</span>';
+    });
+  }
+  function doSyncNow(){
+    if (!gasUrl) { toast("Sila simpan URL Apps Script dahulu."); return; }
+    if (!articles.length) { toast("Tiada artikel dalam database untuk di-sync."); return; }
+    $("#pSyncStatus").innerHTML = "Menghantar " + articles.length + " artikel ke Google Sheets...";
+    fetch(gasUrl, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ articles, syncTime: new Date().toISOString() })
+    }).then(r=>r.json()).then(d => {
+      if (d.success) {
+        $("#pSyncStatus").innerHTML = '<span style="color:#0F6E56">&#10003; '+escapeHtml(d.message)+'</span>';
+        toast("&#10003; " + articles.length + " artikel berjaya sync ke Google Sheets!");
+      } else {
+        $("#pSyncStatus").innerHTML = '<span style="color:var(--danger)">&#10007; '+escapeHtml(d.message)+'</span>';
+      }
+    }).catch(e => {
+      $("#pSyncStatus").innerHTML = '<span style="color:var(--danger)">&#10007; Gagal hantar: '+escapeHtml(e.message)+'<br>Cuba semak: (1) URL betul (2) Apps Script sudah deploy (3) Akses "Anyone"</span>';
+    });
+  }
+  async function loadFromSheets(silent){
+    if (!gasUrl) { if (!silent) toast("Sila setup URL Apps Script dahulu."); return false; }
+    if (!silent) $("#pSyncStatus").innerHTML = "Memuat turun data dari Google Sheets...";
+    try {
+      const res = await fetch(gasUrl);
+      const d = await res.json();
+      if (d.success && Array.isArray(d.articles) && d.articles.length) {
+        articles = d.articles.map(normalizeArticle);
+        await saveData();
+        renderStats();
+        if (activeTab === "database") renderDatabase();
+        if (!silent) {
+          $("#pSyncStatus").innerHTML = `<span style="color:#0F6E56">&#10003; ${articles.length} artikel dimuat turun dari Google Sheets.</span>`;
+        }
+        toast(`&#10003; ${articles.length} artikel dipulihkan dari Google Sheets.`);
+        return true;
+      } else if (!silent) {
+        $("#pSyncStatus").innerHTML = `<span style="color:var(--danger)">Tiada data ditemui di Google Sheets, atau skrip Apps Script belum dikemas kini ke versi terbaharu (perlu semula deploy dengan kod baharu).</span>`;
+      }
+    } catch(e) {
+      if (!silent) $("#pSyncStatus").innerHTML = `<span style="color:var(--danger)">&#10007; Gagal muat turun: ${escapeHtml(e.message)}</span>`;
+    }
+    return false;
+  }
+
+  function exportBackup(){
+    const blob = new Blob([JSON.stringify(articles, null, 2)], {type: "application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "pangkalan_literatur_tesis_backup.json"; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function bindEvents(){
+    $("#pCopyPromptBtn").addEventListener("click", () => {
+      copyText(buildPromptText());
+      const btn = $("#pCopyPromptBtn");
+      const orig = btn.textContent; btn.textContent = "Disalin!";
+      setTimeout(()=>btn.textContent = orig, 1500);
+    });
+    $("#pImportBtn").addEventListener("click", importJson);
+    $("#pClearJsonBtn").addEventListener("click", () => { $("#pJsonInput").value = ""; $("#pImportMsg").style.display="none"; });
+    $("#pManualAddBtn").addEventListener("click", () => openEditForm(null));
+
+    $("#pDbSearch").addEventListener("input", (e) => { dbFilter.search = e.target.value; renderDatabase(); });
+    $("#pDbTemaFilter").addEventListener("change", (e) => { dbFilter.tema = e.target.value; renderDatabase(); });
+    $("#pDbNegaraFilter").addEventListener("change", (e) => { dbFilter.negara = e.target.value; renderDatabase(); });
+    $("#pDbRoFilter").addEventListener("change", (e) => { dbFilter.ro = e.target.value; renderDatabase(); });
+    $("#pDbKepFilter").addEventListener("change", (e) => { dbFilter.kepentingan = e.target.value; renderDatabase(); });
+    $("#pDbTahapFilter").addEventListener("change", (e) => { dbFilter.tahap = e.target.value; renderDatabase(); });
+    $("#pDbQuartileFilter").addEventListener("change", (e) => { dbFilter.quartile = e.target.value; renderDatabase(); });
+    $("#pDbPdfFilter").addEventListener("change", (e) => { dbFilter.pdf = e.target.value; renderDatabase(); });
+    $("#pDbUsedFilter").addEventListener("change", (e) => { dbFilter.used = e.target.value; renderDatabase(); });
+    $("#pDbWarnaFilter").addEventListener("change", (e) => { dbFilter.warna = e.target.value; renderDatabase(); });
+    $("#pDbBacaFilter").addEventListener("change", (e) => { dbFilter.baca = e.target.value; renderDatabase(); });
+    $("#pDbPeringkatFilter").addEventListener("change", (e) => { dbFilter.peringkat = e.target.value; renderDatabase(); });
+
+    $("#pBwTema").addEventListener("change", renderBabWriter);
+    $("#pBwSort").addEventListener("change", renderBabWriter);
+
+    $("#pCitSearch").addEventListener("input", (e) => { citFilter = e.target.value; renderCitation(); });
+    $("#pCitMode").addEventListener("change", renderCitation);
+
+    $("#pGapSearch").addEventListener("input", (e) => { gapFilter = e.target.value; renderGap(); });
+
+    $("#pSynType").addEventListener("change", renderSintesis);
+    $("#pSynCopyBtn").addEventListener("click", () => {
+      copyText($("#pSynWrap").innerHTML);
+      toast("HTML jadual disalin.");
+    });
+
+    $("#pCopyApaBtn").addEventListener("click", () => {
+      const text = articles.slice().sort((a,b)=>(a.penulis||"").localeCompare(b.penulis||"")).map(apaString).join("\n\n");
+      copyText(text);
+      const btn = $("#pCopyApaBtn");
+      const orig = btn.textContent; btn.textContent = "Disalin!";
+      setTimeout(()=>btn.textContent = orig, 1500);
+    });
+
+    $("#pExportBtn").addEventListener("click", exportBackup);
+    $("#pImportBackupBtn").addEventListener("click", () => $("#pImportBackupFile").click());
+    $("#pImportBackupFile").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        try {
+          const parsed = JSON.parse(ev.target.result);
+          const list = Array.isArray(parsed) ? parsed : [parsed];
+          let added=0, updated=0, skipped=0;
+          list.forEach(item => {
+            if (item && item.tolak === true) { skipped++; return; }
+            const norm = normalizeArticle(item);
+            if (!norm.tajuk || !norm.tajuk.trim() || !isRelevant(norm)) { skipped++; return; }
+            const idx = articles.findIndex(a => a.kod === norm.kod);
+            if (idx >= 0) { articles[idx] = norm; updated++; return; }
+            if (findDuplicate(norm, norm.kod)) { skipped++; return; }
+            articles.push(norm); added++;
+          });
+          await saveData();
+          renderStats();
+          if (activeTab === "database") renderDatabase();
+          toast(`Backup dimuat: ${added} baharu, ${updated} dikemas kini${skipped ? `, ${skipped} dilangkau (tidak berkaitan/tidak lengkap)` : ""}.`);
+        } catch(err) { toast("Fail JSON tidak sah: " + err.message); }
+        e.target.value = "";
+      };
+      reader.readAsText(file);
+    });
+
+    $("#pClearAllBtn").addEventListener("click", () => {
+      showConfirm("Padam SEMUA data artikel? Tindakan ini tidak boleh dibatalkan.", async () => {
+        articles = [];
+        await saveData();
+        renderStats(); renderDatabase(); renderBabWriter(); renderMatrix(); renderEvidence(); renderCitation(); renderGap(); renderTema(); renderSintesis(); renderApa();
+        toast("Semua data dipadam.");
+      });
+    });
+
+    $("#pModalBg").addEventListener("click", (e) => { if (e.target.id === "pModalBg") closeModal(); });
+    $("#pEditBg").addEventListener("click", (e) => { if (e.target.id === "pEditBg") closeEditForm(); });
+    $("#pConfirmBg").addEventListener("click", (e) => { if (e.target.id === "pConfirmBg") $("#pConfirmNo").click(); });
+
+    $("#pAnalyticsBtn").addEventListener("click", openAnalytics);
+    $("#pAnalyticsBg").addEventListener("click", (e) => { if (e.target.id === "pAnalyticsBg") closeAnalytics(); });
+
+    $("#pRoBg").addEventListener("click", (e) => { if (e.target.id === "pRoBg") closeRoManager(); });
+
+    $("#pPriorityManageBtn").addEventListener("click", openPriorityManager);
+    $("#pPriorityBg").addEventListener("click", (e) => { if (e.target.id === "pPriorityBg") closePriorityManager(); });
+
+    $("#pTargetBg").addEventListener("click", (e) => { if (e.target.id === "pTargetBg") $("#pTargetBg").classList.remove("show"); });
+
+    $("#pTemaMgrBtn").addEventListener("click", openTemaManager);
+    $("#pTemaMgrBg").addEventListener("click", (e) => { if (e.target.id === "pTemaMgrBg") closeTemaManager(); });
+
+    $("#pBackupBtn").addEventListener("click", exportBackup);
+
+    $("#pAutosaveBtn").addEventListener("click", openAutosaveInfo);
+    $("#pAutosaveBg").addEventListener("click", (e) => { if (e.target.id === "pAutosaveBg") closeAutosaveInfo(); });
+
+    $("#pSyncBtn").addEventListener("click", openSyncModal);
+    $("#pSyncBg").addEventListener("click", (e) => { if (e.target.id === "pSyncBg") closeSyncModal(); });
+    $("#pSyncCloseX").addEventListener("click", closeSyncModal);
+    $("#pCopyGasBtn").addEventListener("click", copyGasCode);
+    $("#pSyncNext1").addEventListener("click", () => goSyncStep(2));
+    $("#pSyncBack2").addEventListener("click", () => goSyncStep(1));
+    $("#pSyncSaveUrl").addEventListener("click", saveGasUrlInput);
+    $("#pSyncBack3").addEventListener("click", () => goSyncStep(2));
+    $("#pSyncTest").addEventListener("click", testSyncConn);
+    $("#pSyncNow").addEventListener("click", doSyncNow);
+    $("#pSyncPull").addEventListener("click", () => loadFromSheets(false));
+  }
+
+  async function init(){
+    $("#pThesisTitle").textContent = THESIS;
+    await loadTemaMap();
+    await loadROS();
+    renderRoChips();
+    await loadPriorityDocs();
+    await loadTarget();
+    $("#pGasCode").textContent = GAS_CODE;
+    await loadData();
+    await loadGasUrl();
+    if (articles.length === 0 && gasUrl) {
+      await loadFromSheets(true);
+    }
+    $("#pLoading").style.display = "none";
+    $("#pPanels").style.display = "block";
+    renderNav();
+    renderStats();
+    renderDatabase();
+    bindEvents();
+  }
+  init();
+})();
+</script>
+</body>
+</html>
