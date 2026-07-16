@@ -167,6 +167,9 @@ details.p-tema-list summary{cursor:pointer;color:var(--maroon)}
 .p-rejected-item{background:#F5E4E4;border:1px solid #E3C4C4;border-left:3px solid var(--danger);border-radius:0 6px 6px 0;padding:9px 12px;margin-bottom:6px;font-size:12px}
 .p-rejected-item .rt{font-weight:600;color:var(--ink)}
 .p-rejected-item .rs{font-size:11px;color:#7A2929;margin-top:3px;font-style:italic}
+.p-conflict-item{background:#FDEBD0;border:1px solid #E8B96A;border-left:3px solid #B9770E;border-radius:0 6px 6px 0;padding:9px 12px;margin-bottom:6px;font-size:12px}
+.p-conflict-item .rt{font-weight:600;color:var(--ink)}
+.p-conflict-item .rs{font-size:11px;color:#8A5A0A;margin-top:3px;line-height:1.5}
 
 /* apa */
 .p-apa-item{font-size:12.5px;padding:8px 0;border-bottom:1px solid var(--line);line-height:1.5}
@@ -275,6 +278,7 @@ table.p-matrix td.left{text-align:left}
               <button class="p-btn outline" id="pClearJsonBtn">Kosongkan</button>
             </div>
             <div class="p-msg" id="pImportMsg"></div>
+            <div id="pKodConflictWrap"></div>
             <div id="pDuplicateWrap"></div>
             <div id="pRejectedWrap"></div>
           </div>
@@ -1616,6 +1620,11 @@ function doGet(e) {
     const kod = $("#efKod").value.trim();
     const tajuk = $("#efTajuk").value.trim();
     if (!kod || !tajuk) { toast("Kod dan Tajuk wajib diisi."); return; }
+    const collision = articles.find(x => x.kod === kod && x.kod !== editingKod);
+    if (collision) {
+      toast(`⚠ Kod "${kod}" sudah digunakan oleh "${collision.tajuk}". Sila tukar kod artikel ini sebelum simpan.`);
+      return;
+    }
     const gdrive = $("#efGdrive").value.trim();
     let pdf = $("#efPdf").value;
     if (!gdrive) pdf = "none";
@@ -1658,7 +1667,7 @@ function doGet(e) {
       priority: $("#efPriority").value, nota: $("#efNota").value.trim()
     };
     rec.citationAPA = apaString(rec);
-    const idx = articles.findIndex(x => x.kod === (editingKod || kod));
+    const idx = editingKod ? articles.findIndex(x => x.kod === editingKod) : -1;
     if (idx < 0) {
       const dup = findDuplicate(rec, rec.kod);
       if (dup) {
@@ -2029,19 +2038,32 @@ Sila hasilkan draf perenggan sedia untuk saya semak dan sesuaikan.`;
     </div>`;
   }
 
+  function renderKodConflicts(list){
+    const wrap = $("#pKodConflictWrap");
+    if (!list.length) { wrap.innerHTML = ""; return; }
+    wrap.innerHTML = `<div class="p-rejected-wrap">
+      <div class="p-rejected-head" style="color:#B9770E">&#9888; ${list.length} kod bertindih — TIDAK diganti automatik</div>
+      ${list.map(c => `<div class="p-conflict-item">
+        <div class="rt">Kod "${escapeHtml(c.kod)}" sudah digunakan</div>
+        <div class="rs">Artikel sedia ada: <b>${escapeHtml(c.tajukSedia)}</b><br>Artikel baharu anda: <b>${escapeHtml(c.tajukBaru)}</b><br>Tindakan: tukar kod pada JSON (cth "${escapeHtml(c.kod)}-2") dan import semula, ATAU kemas kini artikel sedia ada secara manual di tab Database jika ia memang artikel yang sama.</div>
+      </div>`).join("")}
+    </div>`;
+  }
+
   async function importJson(){
     const raw = $("#pJsonInput").value.trim();
     const msg = $("#pImportMsg");
     msg.className = "p-msg"; msg.style.display = "none";
-    $("#pRejectedWrap").innerHTML = ""; $("#pDuplicateWrap").innerHTML = "";
+    $("#pRejectedWrap").innerHTML = ""; $("#pDuplicateWrap").innerHTML = ""; $("#pKodConflictWrap").innerHTML = "";
     if (!raw) { msg.className = "p-msg err"; msg.textContent = "Sila tampal JSON dahulu."; return; }
     let parsed;
     try { parsed = JSON.parse(raw); }
     catch(e) { msg.className = "p-msg err"; msg.textContent = "JSON tidak sah: " + e.message; return; }
     const list = Array.isArray(parsed) ? parsed : [parsed];
-    let added = 0, updated = 0;
+    let added = 0;
     const rejected = [];
     const duplicates = [];
+    const kodConflicts = [];
 
     list.forEach(item => {
       if (item && item.tolak === true) {
@@ -2057,8 +2079,11 @@ Sila hasilkan draf perenggan sedia untuk saya semak dan sesuaikan.`;
         rejected.push({ kod: norm.kod, tajuk: norm.tajuk, sebab: "Tiada topik berkaitan kajian dikesan (subtopik S00–S19 kosong/tidak sah) — artikel dianggap tidak berkaitan." });
         return;
       }
-      const idx = articles.findIndex(a => a.kod === norm.kod);
-      if (idx >= 0) { articles[idx] = norm; updated++; return; }
+      const existing = articles.find(a => a.kod === norm.kod);
+      if (existing) {
+        kodConflicts.push({ kod: norm.kod, tajukSedia: existing.tajuk, tajukBaru: norm.tajuk });
+        return;
+      }
       const dup = findDuplicate(norm, norm.kod);
       if (dup) {
         duplicates.push({ kod: norm.kod, tajuk: norm.tajuk, existing: dup.kod });
@@ -2071,16 +2096,17 @@ Sila hasilkan draf perenggan sedia untuk saya semak dan sesuaikan.`;
     renderStats();
     const parts = [];
     if (added) parts.push(`${added} artikel baharu ditambah`);
-    if (updated) parts.push(`${updated} dikemas kini`);
+    if (kodConflicts.length) parts.push(`${kodConflicts.length} kod bertindih (tidak diganti)`);
     if (duplicates.length) parts.push(`${duplicates.length} dilangkau (pendua)`);
     if (rejected.length) parts.push(`${rejected.length} ditolak (tidak berkaitan)`);
     if (parts.length) {
-      msg.className = (added || updated) ? "p-msg ok" : "p-msg err";
+      msg.className = added ? "p-msg ok" : "p-msg err";
       msg.textContent = parts.join(", ") + ".";
     } else {
       msg.className = "p-msg err";
       msg.textContent = "Tiada artikel dikesan dalam JSON.";
     }
+    renderKodConflicts(kodConflicts);
     renderRejected(rejected);
     renderDuplicates(duplicates);
     $("#pJsonInput").value = "";
