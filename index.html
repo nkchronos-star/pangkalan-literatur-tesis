@@ -341,6 +341,13 @@ table.p-matrix td.left{text-align:left}
               <option value="IPT">IPT</option>
               <option value="Umum">Umum</option>
             </select>
+            <select class="p-select" id="pDbSort">
+              <option value="">Tiada Susunan Khas</option>
+              <option value="quality">Skor Kualiti (Tertinggi Dahulu)</option>
+              <option value="priority">Penarafan ⭐ (Tertinggi Dahulu)</option>
+              <option value="tahun">Tahun (Terbaru Dahulu)</option>
+              <option value="citation">Sitasi Luar (Tertinggi Dahulu)</option>
+            </select>
           </div>
           <div id="pDbTableWrap"></div>
         </div>
@@ -357,6 +364,12 @@ table.p-matrix td.left{text-align:left}
               <option value="negara">Malaysia dahulu</option>
               <option value="priority">Keutamaan bacaan</option>
             </select>
+            <button class="p-btn gold small" id="pBwGenPromptBtn">📝 Jana Prompt Penulisan</button>
+          </div>
+          <div id="pBwPromptWrap" style="display:none;margin-bottom:16px">
+            <div class="p-prompt-box" id="pBwPromptBox" style="max-height:260px"></div>
+            <button class="p-btn outline small" id="pBwCopyPromptBtn">Salin Prompt</button>
+            <span style="font-size:11px;color:var(--ink-soft);margin-left:8px">Tampal ini dalam chat Claude (boleh perbualan baharu) untuk terus dapat draf perenggan Bab 2</span>
           </div>
           <div id="pBwWrap"></div>
         </div>
@@ -649,12 +662,12 @@ table.p-matrix td.left{text-align:left}
 
 JIKA TIDAK BERKAITAN: jangan jana rekod penuh. Balas HANYA dengan JSON ini sahaja: {"tolak": true, "kod": "(kod ringkas jika ada)", "tajuk": "(tajuk penuh)", "penulis": "(penulis jika ada)", "sebab": "(jelaskan ringkas dalam 1 ayat kenapa tidak berkaitan)"}.
 
-JIKA BERKAITAN: teruskan jana JSON penuh. Ini SATU database bersepadu untuk keseluruhan tesis. Objektif Kajian: ${roDesc}. Subtopik: S00=${TEMA_MAP.S00 || "Dasar Pendidikan & Polisi"} (dokumen dasar/polisi rasmi sahaja, DUA peringkat — Antarabangsa: UNESCO/OECD, dan Malaysia: KPM/PPPM/DSKP — guna topik INI, bukan artikel jurnal empirikal; untuk dokumen organisasi seperti UNESCO/OECD/KPM, letak nama organisasi pada medan "penulis" cth "UNESCO" atau "OECD"; babDisokong lazimnya Bab 1/Bab 2/Bab 5, tahapKepentingan Tinggi untuk dokumen rangka kerja/panduan utama (cth UNESCO AI Competency Framework, Guidance for Generative AI) dan Sederhana untuk dokumen sokongan konteks am, dv/iv/mediator/moderator boleh dibiarkan kosong), ${otherTopics}. Jana JSON dengan SEMUA medan ini: tolak (false), kod (cth S04-001 atau S00-001), kategori (Artikel Jurnal/Tesis/Prosiding/Laporan/Buku/Dasar/Dokumen Rasmi/Lain-lain), penulis, tahun, tajuk, jurnal, vol, doi, urlRasmi (URL/pautan rasmi artikel jika ada, cth pautan DOI penuh atau laman penerbit — bukan link storan peribadi), negara, peringkatPendidikan (Sekolah Rendah/Sekolah Menengah/Pra-Universiti/IPT/Umum — peringkat pendidikan konteks kajian artikel tersebut, bukan konteks kajian saya), jenis (cth Eksperimen Kuasi, Kajian Kuantitatif, Dasar/Polisi, Rangka Kerja/Panduan Antarabangsa, Statistik/Laporan Rasmi), rekaBentukKajian (Kuantitatif/Kualitatif/Mixed Method — kosongkan jika S00), quartile (Q1/Q2/Q3/Q4/Scopus/WoS/preprint/tiada), kataKunci (array kata kunci/keywords artikel), pdf (full/part/none), gdrive (biarkan kosong string), impakFaktor, sampel, obj, persoalanKajian (array persoalan kajian jika dinyatakan penulis, kosongkan jika tiada), kaedah, instrumen, kaedahAnalisis, teori (array teori asas artikel, kosongkan jika S00), dv, iv, mediator, moderator (kosongkan jika S00), dapatan (array dapatan/hala tuju/statistik/cadangan utama), kelemahanKajian (array limitasi/kelemahan yang dinyatakan penulis, kosongkan jika S00), cadanganKajian (array cadangan kajian akan datang/future research yang disyorkan penulis, kosongkan jika S00), novelty (1-2 ayat ringkas menjelaskan apa yang baharu/signifikan tentang kajian ini berbanding kajian lain, kosongkan jika S00), gap (array research gap atau cabaran pelaksanaan jika S00), kaitan (kaitan dengan kajian ini), ayat (satu ayat BM akademik siap guna tesis), petikan (array 1-3 petikan/idea utama PENDEK untuk rujukan penulis — setiap satu MESTI ringkas, bukan salinan panjang perenggan asal, dan jika memetik terus hadkan kepada frasa pendek sahaja demi mematuhi hak cipta; jika ragu-ragu, parafrasa idea dalam ayat sendiri berbanding petik terus), digunakanDalam (biarkan array kosong [] — ini ditanda MANUAL oleh pelajar semasa menulis tesis, bukan oleh AI), topik (array kod subtopik berkaitan, WAJIB sekurang-kurangnya SATU kod S00-S19, cth ["S04","S17"]), babDisokong (array bab tesis yang disokong, cth ["Bab 1","Bab 2"]), ro (array RO berkaitan dari senarai berikut: ${ROS.map(r=>r.k).join(", ")} — boleh kosong jika S00), tahapKepentingan (Tinggi/Sederhana/Rendah), tahapArtikel (WAJIB/SOKONGAN/KONTEKS), prioritiWarna (hijau=sangat penting/wajib sitasi, kuning=penting, biru=sokongan, merah=tidak relevan — nilaikan berdasarkan kekuatan kaitan dengan kajian saya), statusBacaan (biarkan sebagai "Belum" — ini ditanda MANUAL oleh pelajar), priority (1-5), nota. Jika beberapa dokumen diberikan sekali gus, nilai SETIAP SATU berasingan dan pulangkan semua dalam SATU array JSON. Keluarkan JSON sahaja, tiada teks lain.`;
+JIKA BERKAITAN: teruskan jana JSON penuh. Ini SATU database bersepadu untuk keseluruhan tesis. Objektif Kajian: ${roDesc}. Subtopik: S00=${TEMA_MAP.S00 || "Dasar Pendidikan & Polisi"} (dokumen dasar/polisi rasmi sahaja, DUA peringkat — Antarabangsa: UNESCO/OECD, dan Malaysia: KPM/PPPM/DSKP — guna topik INI, bukan artikel jurnal empirikal; untuk dokumen organisasi seperti UNESCO/OECD/KPM, letak nama organisasi pada medan "penulis" cth "UNESCO" atau "OECD"; babDisokong lazimnya Bab 1/Bab 2/Bab 5, tahapKepentingan Tinggi untuk dokumen rangka kerja/panduan utama (cth UNESCO AI Competency Framework, Guidance for Generative AI) dan Sederhana untuk dokumen sokongan konteks am, dv/iv/mediator/moderator boleh dibiarkan kosong), ${otherTopics}. Jana JSON dengan SEMUA medan ini: tolak (false), kod (cth S04-001 atau S00-001), kategori (Artikel Jurnal/Tesis/Prosiding/Laporan/Buku/Dasar/Dokumen Rasmi/Lain-lain), penulis, tahun, tajuk, jurnal, vol, doi, urlRasmi (URL/pautan rasmi artikel jika ada, cth pautan DOI penuh atau laman penerbit — bukan link storan peribadi), negara, peringkatPendidikan (Sekolah Rendah/Sekolah Menengah/Pra-Universiti/IPT/Umum — peringkat pendidikan konteks kajian artikel tersebut, bukan konteks kajian saya), jenis (cth Eksperimen Kuasi, Kajian Kuantitatif, Dasar/Polisi, Rangka Kerja/Panduan Antarabangsa, Statistik/Laporan Rasmi), rekaBentukKajian (Kuantitatif/Kualitatif/Mixed Method — kosongkan jika S00), quartile (Q1/Q2/Q3/Q4/Scopus/WoS/preprint/tiada), kataKunci (array kata kunci/keywords artikel), pdf (full/part/none), gdrive (biarkan kosong string), impakFaktor, sampel, obj, persoalanKajian (array persoalan kajian jika dinyatakan penulis, kosongkan jika tiada), kaedah, instrumen, kaedahAnalisis, teori (array teori asas artikel, kosongkan jika S00), dv, iv, mediator, moderator (kosongkan jika S00), dapatan (array dapatan/hala tuju/statistik/cadangan utama), ringkasanPenuh (SATU perenggan naratif 150-300 patah perkataan menggabungkan abstrak+metodologi+dapatan+kesimpulan dalam PARAFRASA ayat sendiri — BUKAN salinan terus dari PDF, demi mematuhi hak cipta; kosongkan jika S00), kelemahanKajian (array limitasi/kelemahan yang dinyatakan penulis, kosongkan jika S00), cadanganKajian (array cadangan kajian akan datang/future research yang disyorkan penulis, kosongkan jika S00), novelty (1-2 ayat ringkas menjelaskan apa yang baharu/signifikan tentang kajian ini berbanding kajian lain, kosongkan jika S00), gap (array research gap atau cabaran pelaksanaan jika S00), kaitan (kaitan dengan kajian ini), ayat (satu ayat BM akademik siap guna tesis), petikan (array 1-3 petikan/idea utama PENDEK untuk rujukan penulis — setiap satu MESTI ringkas, bukan salinan panjang perenggan asal, dan jika memetik terus hadkan kepada frasa pendek sahaja demi mematuhi hak cipta; jika ragu-ragu, parafrasa idea dalam ayat sendiri berbanding petik terus), digunakanDalam (biarkan array kosong [] — ini ditanda MANUAL oleh pelajar semasa menulis tesis, bukan oleh AI), halamanPDF (nombor muka surat rujukan penting jika kelihatan dalam PDF, cth "23" atau "45-47", biarkan kosong jika tidak pasti), bilanganSitasi (biarkan 0 — ini ditanda MANUAL oleh pelajar), tahapBukti (Tinggi/Sederhana/Rendah — nilaikan kekuatan metodologi: Tinggi=reka bentuk eksperimen/kuasi-eksperimen terkawal baik atau meta-analisis, Sederhana=kajian korelasi/tinjauan besar, Rendah=kajian kes/pendapat/kajian teori sahaja; kosongkan jika S00), disahkan (biarkan "Tidak" — ini ditanda MANUAL oleh pelajar selepas semak semula dengan PDF asal), topik (array kod subtopik berkaitan, WAJIB sekurang-kurangnya SATU kod S00-S19, cth ["S04","S17"]), babDisokong (array bab tesis yang disokong, cth ["Bab 1","Bab 2"]), ro (array RO berkaitan dari senarai berikut: ${ROS.map(r=>r.k).join(", ")} — boleh kosong jika S00), tahapKepentingan (Tinggi/Sederhana/Rendah), tahapArtikel (WAJIB/SOKONGAN/KONTEKS), prioritiWarna (hijau=sangat penting/wajib sitasi, kuning=penting, biru=sokongan, merah=tidak relevan — nilaikan berdasarkan kekuatan kaitan dengan kajian saya), statusBacaan (biarkan sebagai "Belum" — ini ditanda MANUAL oleh pelajar), citationCount (biarkan 0 — bilangan sitasi luar artikel ini, biasanya tidak diketahui dari PDF sahaja, boleh isi jika nombor jelas dinyatakan), qualityScore (0-100, anggaran skor kualiti keseluruhan berdasarkan gabungan quartile+kekuatan metodologi+kaitan dengan kajian saya — beri anggaran munasabah, bukan wajib tepat), priority (1-5), nota. Jika beberapa dokumen diberikan sekali gus, nilai SETIAP SATU berasingan dan pulangkan semua dalam SATU array JSON. Keluarkan JSON sahaja, tiada teks lain.`;
   }
 
   let articles = [];
   let activeTab = "import";
-  let dbFilter = { search: "", tema: "", ro: "", kepentingan: "", tahap: "", pdf: "", negara: "", quartile: "", used: "", warna: "", baca: "", peringkat: "" };
+  let dbFilter = { search: "", tema: "", ro: "", kepentingan: "", tahap: "", pdf: "", negara: "", quartile: "", used: "", warna: "", baca: "", peringkat: "", sort: "" };
   const PDF_ICON = { full: "&#9989;", part: "&#9888;", none: "&#10060;" };
   const PDF_LABEL = { full: "PDF Penuh", part: "PDF Sebahagian", none: "Tiada PDF" };
   let gapFilter = "";
@@ -674,8 +687,9 @@ JIKA BERKAITAN: teruskan jana JSON penuh. Ini SATU database bersepadu untuk kese
 
     var headers = ["Kod","Kategori","Topik","RO","Bab Disokong","Penulis","Tahun","Tajuk","Jurnal","Vol","DOI","URL Rasmi",
       "Negara","Peringkat Pendidikan","Jenis","Reka Bentuk Kajian","Quartile","Kata Kunci","Tahap Artikel","Tahap Kepentingan",
-      "Prioriti Warna","Status Bacaan","PDF","Link PDF","Sampel","Persoalan Kajian",
-      "Dapatan","Kelemahan Kajian","Cadangan Kajian","Kebaharuan","Gap","Kaitan Dengan Kajian","Ayat Tesis","Petikan Penting","Digunakan Dalam","Nota","RawJSON"];
+      "Prioriti Warna","Status Bacaan","Tahap Bukti","Disahkan","Bilangan Sitasi","Halaman PDF","Sitasi Luar (Impak)","Skor Kualiti",
+      "PDF","Link PDF","Sampel","Persoalan Kajian",
+      "Dapatan","Ringkasan Penuh","Kelemahan Kajian","Cadangan Kajian","Kebaharuan","Gap","Kaitan Dengan Kajian","Ayat Tesis","Sitasi APA 7","Petikan Penting","Digunakan Dalam","Nota","RawJSON"];
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
     sheet.getRange(1, 1, 1, headers.length).setBackground("#6E2A35").setFontColor("#FFFFFF").setFontWeight("bold");
 
@@ -686,9 +700,10 @@ JIKA BERKAITAN: teruskan jana JSON penuh. Ini SATU database bersepadu untuk kese
           a.penulis||"", a.tahun||"", a.tajuk||"", a.jurnal||"", a.vol||"", a.doi||"", a.urlRasmi||"",
           a.negara||"", a.peringkatPendidikan||"", a.jenis||"", a.rekaBentukKajian||"", a.quartile||"", (a.kataKunci||[]).join(" | "),
           a.tahapArtikel||"", a.tahapKepentingan||"", a.prioritiWarna||"", a.statusBacaan||"Belum",
+          a.tahapBukti||"", a.disahkan||"Tidak", a.bilanganSitasi||0, a.halamanPDF||"", a.citationCount||0, (a.qualityScore||a.qualityScore===0)?a.qualityScore:"",
           a.pdf||"", a.gdrive||"", a.sampel||"", (a.persoalanKajian||[]).join(" | "),
-          (a.dapatan||[]).join(" | "), (a.kelemahanKajian||[]).join(" | "), (a.cadanganKajian||[]).join(" | "), a.novelty||"",
-          (a.gap||[]).join(" | "), a.kaitan||"", a.ayat||"", (a.petikan||[]).join(" | "), (a.digunakanDalam||[]).join(" | "), a.nota||"",
+          (a.dapatan||[]).join(" | "), a.ringkasanPenuh||"", (a.kelemahanKajian||[]).join(" | "), (a.cadanganKajian||[]).join(" | "), a.novelty||"",
+          (a.gap||[]).join(" | "), a.kaitan||"", a.ayat||"", a.citationAPA||"", (a.petikan||[]).join(" | "), (a.digunakanDalam||[]).join(" | "), a.nota||"",
           JSON.stringify(a)
         ];
       });
@@ -1333,13 +1348,18 @@ function doGet(e) {
     if (dbFilter.baca) list = list.filter(a => (a.statusBacaan || "Belum") === dbFilter.baca);
     if (dbFilter.peringkat) list = list.filter(a => a.peringkatPendidikan === dbFilter.peringkat);
 
+    if (dbFilter.sort === "quality") list.sort((a,b) => (b.qualityScore||0) - (a.qualityScore||0));
+    else if (dbFilter.sort === "priority") list.sort((a,b) => (parseInt(b.priority)||0) - (parseInt(a.priority)||0));
+    else if (dbFilter.sort === "tahun") list.sort((a,b) => (parseInt(b.tahun)||0) - (parseInt(a.tahun)||0));
+    else if (dbFilter.sort === "citation") list.sort((a,b) => (b.citationCount||0) - (a.citationCount||0));
+
     if (!list.length) {
       wrap.innerHTML = `<div class="p-empty"><div class="big">&#128218;</div>Tiada artikel lagi. Pergi ke tab <b>Import AI</b> untuk mula tambah artikel.</div>`;
       return;
     }
 
     wrap.innerHTML = `<table class="p-table"><thead><tr>
-      <th></th><th>Kod</th><th>Tajuk</th><th>Penulis (Tahun)</th><th>Negara</th><th>Quartile</th><th>Tema</th><th>PDF</th><th>RO</th><th>Bab</th><th>Digunakan</th><th>Baca</th><th>⭐</th><th>Kepentingan</th><th></th>
+      <th></th><th>Kod</th><th>Tajuk</th><th>Penulis (Tahun)</th><th>Negara</th><th>Quartile</th><th>Tema</th><th>PDF</th><th title="Disahkan dengan PDF asal">✓</th><th>RO</th><th>Bab</th><th>Digunakan</th><th>Baca</th><th>⭐</th><th>Kepentingan</th><th></th>
     </tr></thead><tbody>${list.map(a => {
       const origIndex = articles.indexOf(a);
       const pdfStatus = a.pdf || "none";
@@ -1361,6 +1381,7 @@ function doGet(e) {
         <td>${quartileBadge(a.quartile)}</td>
         <td>${asArray(a.topik).map(t=>`<span class="p-badge">${escapeHtml(t)}</span>`).join('')}</td>
         <td style="text-align:center;font-size:14px">${pdfCell}</td>
+        <td style="text-align:center" title="${a.disahkan==='Ya'?'Disahkan dengan PDF asal':'Belum disahkan'}">${a.disahkan==='Ya' ? '<span style="color:var(--success);font-weight:700">&#10003;</span>' : '<span class="p-used-none">-</span>'}</td>
         <td>${asArray(a.ro).map(r=>`<span class="p-badge ro">${escapeHtml(r)}</span>`).join('') || '-'}</td>
         <td>${asArray(a.babDisokong).map(b=>`<span class="p-badge bab">${escapeHtml(b)}</span>`).join('') || '-'}</td>
         <td>${usedCell}</td>
@@ -1403,6 +1424,9 @@ function doGet(e) {
       ["Negara", a.negara], ["Peringkat Pendidikan", a.peringkatPendidikan],
       ["Jenis", a.jenis], ["Reka Bentuk Kajian", a.rekaBentukKajian], ["Quartile", a.quartile], ["Impak Faktor", a.impakFaktor],
       ["Kata Kunci", asArray(a.kataKunci).join(", ")],
+      ["Sitasi APA 7 (Siap Guna)", a.citationAPA],
+      ["Bilangan Sitasi Luar (Impak)", a.citationCount ? String(a.citationCount) : ""],
+      ["Skor Kualiti", (a.qualityScore || a.qualityScore === 0) ? `${a.qualityScore}/100` : ""],
       ["Status PDF", a.pdf], ["Link PDF", a.gdrive ? `<a href="${escapeHtml(a.gdrive)}" target="_blank">${escapeHtml(a.gdrive)}</a>` : ""],
       ["Sampel", a.sampel], ["Objektif", a.obj],
       ["Persoalan Kajian", asArray(a.persoalanKajian).map(d=>"• "+escapeHtml(d)).join("<br>")],
@@ -1410,13 +1434,18 @@ function doGet(e) {
       ["Teori", asArray(a.teori).join("; ")], ["DV", a.dv], ["IV", a.iv],
       ["Mediator", a.mediator], ["Moderator", a.moderator],
       ["Dapatan", asArray(a.dapatan).map(d=>"• "+escapeHtml(d)).join("<br>")],
+      ["Ringkasan Penuh", a.ringkasanPenuh],
       ["Kelemahan Kajian", asArray(a.kelemahanKajian).map(d=>"• "+escapeHtml(d)).join("<br>")],
       ["Cadangan Kajian Akan Datang", asArray(a.cadanganKajian).map(d=>"• "+escapeHtml(d)).join("<br>")],
       ["Kebaharuan (Novelty)", a.novelty],
       ["Gap", asArray(a.gap).map(d=>"• "+escapeHtml(d)).join("<br>")],
       ["Kaitan Dengan Kajian", a.kaitan], ["Ayat Akademik", a.ayat],
       ["Petikan Penting / Idea Utama", asArray(a.petikan).map(d=>"• "+escapeHtml(d)).join("<br>")],
+      ["Halaman PDF Rujukan", a.halamanPDF],
       ["Digunakan Dalam Penulisan", asArray(a.digunakanDalam).length ? asArray(a.digunakanDalam).map(u=>`<span class="p-used-badge">${escapeHtml(u)}</span>`).join(' ') : '<span class="p-used-none">Belum digunakan</span>'],
+      ["Bilangan Sitasi Dalam Tesis", a.bilanganSitasi ? String(a.bilanganSitasi) : "0"],
+      ["Tahap Bukti", a.tahapBukti],
+      ["Disahkan (Semak PDF Asal)", a.disahkan === "Ya" ? '<span class="p-badge kep-tinggi">✓ Ya</span>' : '<span class="p-badge kep-none">Tidak</span>'],
       ["Bab Disokong", asArray(a.babDisokong).join(", ")], ["RO", asArray(a.ro).join(", ")], ["Topik", asArray(a.topik).join(", ")],
       ["Tahap Artikel", a.tahapArtikel], ["Tahap Kepentingan", a.tahapKepentingan],
       ["Prioriti Warna", a.prioritiWarna ? `<span class="p-dot ${escapeHtml(a.prioritiWarna)}"></span> ${escapeHtml(WARNA_LABEL[a.prioritiWarna]||'')}` : ""],
@@ -1468,6 +1497,8 @@ function doGet(e) {
     const warnaOpts = [{v:"",l:"-"},{v:"hijau",l:"🟢 Sangat Penting (wajib sitasi)"},{v:"kuning",l:"🟡 Penting"},{v:"biru",l:"🔵 Sokongan"},{v:"merah",l:"🔴 Tidak Relevan"}];
     const bacaOpts = [{v:"Belum",l:"Belum Baca"},{v:"Sedang",l:"Sedang Baca"},{v:"Selesai",l:"Selesai Baca"}];
     const peringkatOpts = [{v:"",l:"-"},{v:"Sekolah Rendah",l:"Sekolah Rendah"},{v:"Sekolah Menengah",l:"Sekolah Menengah"},{v:"Pra-Universiti",l:"Pra-Universiti"},{v:"IPT",l:"IPT"},{v:"Umum",l:"Umum"}];
+    const tahapBuktiOpts = [{v:"",l:"-"},{v:"Tinggi",l:"Tinggi"},{v:"Sederhana",l:"Sederhana"},{v:"Rendah",l:"Rendah"}];
+    const disahkanOpts = [{v:"Tidak",l:"Tidak"},{v:"Ya",l:"Ya — telah disemak dengan PDF asal"}];
 
     $("#pEditContent").innerHTML = `
       <h3 class="serif">${kod ? "Sunting Artikel" : "Tambah Artikel"}</h3>
@@ -1487,6 +1518,8 @@ function doGet(e) {
         ${fieldRow("Reka Bentuk Kajian","efRekaBentuk","select",{options:rekaBentukOpts})}
         ${fieldRow("Quartile","efQuartile","select",{options:quartileOpts})}
         ${fieldRow("Kata Kunci (pisah koma)","efKataKunci","text",{full:true,ph:"AI, motivasi, Sejarah"})}
+        ${fieldRow("Bilangan Sitasi Luar (impak artikel, cth Google Scholar)","efCitationCount","text",{ph:"0"})}
+        ${fieldRow("Skor Kualiti (0-100, artikel terbaik dulu)","efQualityScore","text",{ph:"cth 95"})}
         ${fieldRow("Status PDF (auto ikut link di bawah)","efPdf","select",{options:pdfOpts})}
         ${fieldRow("Link PDF (Google Drive / storan anda)","efGdrive","text",{full:true,ph:"https://drive.google.com/... — kosongkan jika belum ada, status akan jadi ❌ automatik"})}
         ${fieldRow("Impak Faktor","efIF","text")}
@@ -1502,6 +1535,7 @@ function doGet(e) {
         ${fieldRow("Instrumen","efInstrumen","text",{full:true,ph:"cth Ujian pra-pasca, soal selidik motivasi"})}
         ${fieldRow("Kaedah Analisis","efAnalisis","text",{full:true,ph:"cth ANCOVA, Ujian-t"})}
         ${fieldRow("Dapatan (pisah |)","efDapatan","textarea",{full:true})}
+        ${fieldRow("Ringkasan Penuh (naratif parafrasa: abstrak+metodologi+dapatan+kesimpulan, BUKAN salinan PDF)","efRingkasan","textarea",{full:true,ph:"150-300 patah perkataan dalam ayat sendiri, bukan petik terus dari PDF"})}
         ${fieldRow("Kelemahan Kajian (pisah |)","efKelemahan","textarea",{full:true,ph:"Limitasi yang dinyatakan penulis"})}
         ${fieldRow("Cadangan Kajian Akan Datang (pisah |)","efCadangan","textarea",{full:true,ph:"Future research yang disyorkan penulis"})}
         ${fieldRow("Kebaharuan (Novelty)","efNovelty","textarea",{full:true,ph:"Apa yang baharu tentang kajian ini"})}
@@ -1509,7 +1543,12 @@ function doGet(e) {
         ${fieldRow("Kaitan Dengan Kajian","efKaitan","textarea",{full:true})}
         ${fieldRow("Ayat Akademik Siap Guna","efAyat","textarea",{full:true})}
         ${fieldRow("Petikan Penting / Idea Utama (pisah |, ringkas & patuh hak cipta)","efPetikan","textarea",{full:true,ph:"cth: Kajian ini menyokong penggunaan scaffolding dalam AI Tutor|..."})}
+        ${fieldRow("Halaman PDF Rujukan","efHalaman","text",{ph:"cth: 23, 45-47"})}
         ${fieldRow("Digunakan Dalam Penulisan","efDigunakan","checkboxes",{options:DIGUNAKAN_OPTIONS})}
+        ${fieldRow("Sub-Bahagian Khusus (pisah koma, cth Bab2.4, Bab2.5)","efSubBahagian","text",{full:true,ph:"Bab2.4, Bab2.5, Bab5.1"})}
+        ${fieldRow("Bilangan Sitasi Dalam Tesis","efBilanganSitasi","text",{ph:"0"})}
+        ${fieldRow("Tahap Bukti (Kekuatan Metodologi)","efTahapBukti","select",{options:tahapBuktiOpts})}
+        ${fieldRow("Disahkan (Disemak dengan PDF Asal)","efDisahkan","select",{options:disahkanOpts})}
         ${fieldRow("Bab Disokong (pisah koma)","efBab","text",{ph:"Bab 1, Bab 2"})}
         ${fieldRow("RO (pisah koma)","efRo","text",{ph:"RO1, RO2"})}
         ${fieldRow("Topik (pisah koma)","efTopik","text",{ph:"S04, S17"})}
@@ -1533,6 +1572,8 @@ function doGet(e) {
       $("#efPeringkat").value = a.peringkatPendidikan||""; $("#efKategori").value = a.kategori||"Artikel Jurnal";
       $("#efJenis").value = a.jenis||""; $("#efRekaBentuk").value = a.rekaBentukKajian||""; $("#efQuartile").value = a.quartile||"";
       $("#efKataKunci").value = asArray(a.kataKunci).join(", ");
+      $("#efCitationCount").value = a.citationCount||"0";
+      $("#efQualityScore").value = a.qualityScore||"";
       $("#efPdf").value = a.pdf||"full";
       $("#efGdrive").value = a.gdrive||""; $("#efIF").value = a.impakFaktor||""; $("#efSampel").value = a.sampel||"";
       $("#efTeori").value = asArray(a.teori).join("|"); $("#efDv").value = a.dv||""; $("#efIv").value = a.iv||"";
@@ -1540,14 +1581,20 @@ function doGet(e) {
       $("#efPersoalan").value = asArray(a.persoalanKajian).join("|");
       $("#efKaedah").value = a.kaedah||""; $("#efInstrumen").value = a.instrumen||""; $("#efAnalisis").value = a.kaedahAnalisis||"";
       $("#efDapatan").value = asArray(a.dapatan).join("|");
+      $("#efRingkasan").value = a.ringkasanPenuh||"";
       $("#efKelemahan").value = asArray(a.kelemahanKajian).join("|");
       $("#efCadangan").value = asArray(a.cadanganKajian).join("|");
       $("#efNovelty").value = a.novelty||"";
       $("#efGap").value = asArray(a.gap).join("|");
       $("#efKaitan").value = a.kaitan||""; $("#efAyat").value = a.ayat||"";
       $("#efPetikan").value = asArray(a.petikan).join("|");
+      $("#efHalaman").value = a.halamanPDF||"";
       const usedVals = asArray(a.digunakanDalam);
       $$("input[type=checkbox]", $("#efDigunakan")).forEach(cb => { cb.checked = usedVals.includes(cb.value); });
+      $("#efSubBahagian").value = usedVals.filter(v => !DIGUNAKAN_OPTIONS.includes(v)).join(", ");
+      $("#efBilanganSitasi").value = a.bilanganSitasi||"0";
+      $("#efTahapBukti").value = a.tahapBukti||"";
+      $("#efDisahkan").value = a.disahkan||"Tidak";
       $("#efBab").value = asArray(a.babDisokong).join(", "); $("#efRo").value = asArray(a.ro).join(", ");
       $("#efTopik").value = asArray(a.topik).join(", "); $("#efTahapArtikel").value = a.tahapArtikel||"";
       $("#efKepentingan").value = a.tahapKepentingan||""; $("#efWarna").value = a.prioritiWarna||"";
@@ -1582,24 +1629,35 @@ function doGet(e) {
       kategori: $("#efKategori").value, jenis: $("#efJenis").value.trim(), rekaBentukKajian: $("#efRekaBentuk").value,
       quartile: $("#efQuartile").value, pdf, gdrive,
       kataKunci: asArray($("#efKataKunci").value),
+      citationCount: parseInt($("#efCitationCount").value) || 0,
+      qualityScore: $("#efQualityScore").value ? Math.max(0, Math.min(100, parseInt($("#efQualityScore").value))) : "",
       impakFaktor: $("#efIF").value.trim(), sampel: $("#efSampel").value.trim(),
       teori: asArray($("#efTeori").value), dv: $("#efDv").value.trim(), iv: $("#efIv").value.trim(),
       mediator: $("#efMed").value.trim(), moderator: $("#efMod").value.trim(), obj: $("#efObj").value.trim(),
       persoalanKajian: asArray($("#efPersoalan").value),
       kaedah: $("#efKaedah").value.trim(), instrumen: $("#efInstrumen").value.trim(), kaedahAnalisis: $("#efAnalisis").value.trim(),
       dapatan: asArray($("#efDapatan").value),
+      ringkasanPenuh: $("#efRingkasan").value.trim(),
       kelemahanKajian: asArray($("#efKelemahan").value),
       cadanganKajian: asArray($("#efCadangan").value),
       novelty: $("#efNovelty").value.trim(),
       gap: asArray($("#efGap").value),
       kaitan: $("#efKaitan").value.trim(), ayat: $("#efAyat").value.trim(),
       petikan: asArray($("#efPetikan").value),
-      digunakanDalam: $$("input[type=checkbox]:checked", $("#efDigunakan")).map(cb => cb.value),
+      halamanPDF: $("#efHalaman").value.trim(),
+      digunakanDalam: Array.from(new Set([
+        ...$$("input[type=checkbox]:checked", $("#efDigunakan")).map(cb => cb.value),
+        ...asArray($("#efSubBahagian").value)
+      ])),
+      bilanganSitasi: parseInt($("#efBilanganSitasi").value) || 0,
+      tahapBukti: $("#efTahapBukti").value,
+      disahkan: $("#efDisahkan").value || "Tidak",
       babDisokong: asArray($("#efBab").value), ro: asArray($("#efRo").value), topik: asArray($("#efTopik").value),
       tahapArtikel: $("#efTahapArtikel").value, tahapKepentingan: $("#efKepentingan").value,
       prioritiWarna: $("#efWarna").value, statusBacaan: $("#efBaca").value || "Belum",
       priority: $("#efPriority").value, nota: $("#efNota").value.trim()
     };
+    rec.citationAPA = apaString(rec);
     const idx = articles.findIndex(x => x.kod === (editingKod || kod));
     if (idx < 0) {
       const dup = findDuplicate(rec, rec.kod);
@@ -1627,6 +1685,7 @@ function doGet(e) {
 
   /* ---------- BAB WRITER ---------- */
   function renderBabWriter(){
+    $("#pBwPromptWrap").style.display = "none";
     refreshTemaFilterSelect();
     const sel = $("#pBwTema");
     const tema = sel.value;
@@ -1658,6 +1717,38 @@ function doGet(e) {
       </div>`).join("")}
     </div>`;
     $$(".p-bw-copy", wrap).forEach(btn => btn.addEventListener("click", () => { copyText(btn.dataset.ayat); toast("Ayat disalin."); }));
+  }
+
+  function generateWritingPrompt(){
+    const sel = $("#pBwTema");
+    const tema = sel.value;
+    if (!tema) { toast("Sila pilih subtopik dahulu."); return; }
+    let list = articles.filter(a => asArray(a.topik).includes(tema));
+    if (!list.length) { toast("Tiada artikel untuk subtopik ini."); return; }
+    const order = {WAJIB:0, SOKONGAN:1, KONTEKS:2, undefined:3};
+    list = list.slice().sort((a,b) => (order[a.tahapArtikel]??3) - (order[b.tahapArtikel]??3) || (parseInt(b.tahun)||0)-(parseInt(a.tahun)||0));
+
+    const items = list.map((a,i) => {
+      const parts = [`${i+1}. ${a.penulis||'-'} (${a.tahun||'-'}) [${a.kod}] — ${a.tajuk||'-'}`];
+      if (a.tahapArtikel) parts.push(`   Tahap: ${a.tahapArtikel}`);
+      if (a.dv || a.iv) parts.push(`   DV/IV: ${a.dv||'-'} / ${a.iv||'-'}`);
+      if (asArray(a.dapatan).length) parts.push(`   Dapatan: ${asArray(a.dapatan).join("; ")}`);
+      if (a.ringkasanPenuh) parts.push(`   Ringkasan: ${a.ringkasanPenuh}`);
+      else if (a.ayat) parts.push(`   Nota: ${a.ayat}`);
+      if (a.citationAPA) parts.push(`   Sitasi APA: ${a.citationAPA}`);
+      return parts.join("\n");
+    }).join("\n\n");
+
+    const prompt = `Tulis satu perenggan akademik Bahasa Melayu untuk Bab 2 (Sorotan Literatur) tesis saya tentang tema "${tema} — ${TEMA_MAP[tema]}", berdasarkan senarai artikel berikut yang telah disusun mengikut keutamaan (artikel WAJIB dahulu, diikuti tahun terkini). Gunakan gaya penulisan akademik formal, sertakan sitasi dalam teks (in-text citation) format APA 7 untuk setiap artikel yang dirujuk, dan susun perenggan secara logik (bukan sekadar senarai berasingan setiap artikel). Elakkan memetik terus ayat panjang dari mana-mana sumber — parafrasa dalam bahasa saya sendiri.
+
+Artikel-artikel (${list.length} keseluruhan):
+
+${items}
+
+Sila hasilkan draf perenggan sedia untuk saya semak dan sesuaikan.`;
+
+    $("#pBwPromptBox").textContent = prompt;
+    $("#pBwPromptWrap").style.display = "block";
   }
 
   /* ---------- THESIS MATRIX ---------- */
@@ -1881,6 +1972,14 @@ function doGet(e) {
     const a = Object.assign({}, obj);
     ["topik","teori","dapatan","gap","babDisokong","ro","petikan","digunakanDalam","kataKunci","persoalanKajian","kelemahanKajian","cadanganKajian"].forEach(k => { if (typeof a[k] === "string") a[k] = asArray(a[k]); });
     if (!a.statusBacaan) a.statusBacaan = "Belum";
+    if (!a.disahkan) a.disahkan = "Tidak";
+    if (a.bilanganSitasi === undefined || a.bilanganSitasi === null || a.bilanganSitasi === "") a.bilanganSitasi = 0;
+    else a.bilanganSitasi = parseInt(a.bilanganSitasi) || 0;
+    a.citationCount = parseInt(a.citationCount) || 0;
+    if (a.qualityScore !== undefined && a.qualityScore !== null && a.qualityScore !== "") {
+      a.qualityScore = Math.max(0, Math.min(100, parseInt(a.qualityScore) || 0));
+    }
+    a.citationAPA = apaString(a);
     if (!a.kod) a.kod = "S" + Math.floor(1000 + Math.random()*9000);
     if (!a.kategori) a.kategori = "Artikel Jurnal";
     // PDF status is always derived from whether a saved link actually exists —
@@ -2194,9 +2293,12 @@ function doGet(e) {
     $("#pDbWarnaFilter").addEventListener("change", (e) => { dbFilter.warna = e.target.value; renderDatabase(); });
     $("#pDbBacaFilter").addEventListener("change", (e) => { dbFilter.baca = e.target.value; renderDatabase(); });
     $("#pDbPeringkatFilter").addEventListener("change", (e) => { dbFilter.peringkat = e.target.value; renderDatabase(); });
+    $("#pDbSort").addEventListener("change", (e) => { dbFilter.sort = e.target.value; renderDatabase(); });
 
     $("#pBwTema").addEventListener("change", renderBabWriter);
     $("#pBwSort").addEventListener("change", renderBabWriter);
+    $("#pBwGenPromptBtn").addEventListener("click", generateWritingPrompt);
+    $("#pBwCopyPromptBtn").addEventListener("click", () => { copyText($("#pBwPromptBox").textContent); toast("Prompt disalin — tampal dalam chat Claude."); });
 
     $("#pCitSearch").addEventListener("input", (e) => { citFilter = e.target.value; renderCitation(); });
     $("#pCitMode").addEventListener("change", renderCitation);
