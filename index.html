@@ -113,6 +113,9 @@ table.p-table tr:hover td{background:var(--paper-alt);cursor:pointer}
 .p-page-btn:disabled{opacity:.35;cursor:not-allowed}
 .p-page-ellipsis{padding:0 4px;color:var(--ink-soft);font-size:11.5px}
 
+.p-inline-select{font-size:11px;padding:3px 4px;border:1px solid var(--line);border-radius:4px;background:var(--card);color:var(--ink);font-family:'IBM Plex Mono',monospace;max-width:96px;cursor:pointer}
+.p-inline-select:hover{border-color:var(--maroon)}
+
 /* Modal */
 .p-modal-bg{display:none;position:fixed;inset:0;background:rgba(35,32,27,.55);z-index:999;align-items:center;justify-content:center;padding:20px}
 .p-modal-bg.show{display:flex}
@@ -712,7 +715,8 @@ JIKA BERKAITAN: teruskan jana JSON penuh. Ini SATU database bersepadu untuk kese
       "Negara","Peringkat Pendidikan","Jenis","Reka Bentuk Kajian","Quartile","Kata Kunci","Tahap Artikel","Tahap Kepentingan",
       "Prioriti Warna","Status Bacaan","Tahap Bukti","Disahkan","Bilangan Sitasi","Halaman PDF","Sitasi Luar (Impak)","Skor Kualiti",
       "PDF","Link PDF","Sampel","Persoalan Kajian",
-      "Dapatan","Ringkasan Penuh","Kelemahan Kajian","Cadangan Kajian","Kebaharuan","Gap","Kaitan Dengan Kajian","Ayat Tesis","Sitasi APA 7","Petikan Penting","Digunakan Dalam","Nota","RawJSON"];
+      "Dapatan","Ringkasan Penuh","Kelemahan Kajian","Cadangan Kajian","Kebaharuan","Gap","Kaitan Dengan Kajian","Ayat Tesis","Sitasi APA 7","Petikan Penting","Digunakan Dalam","Nota",
+      "Status PRISMA","Quality Appraisal","RawJSON"];
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
     sheet.getRange(1, 1, 1, headers.length).setBackground("#6E2A35").setFontColor("#FFFFFF").setFontWeight("bold");
 
@@ -727,6 +731,7 @@ JIKA BERKAITAN: teruskan jana JSON penuh. Ini SATU database bersepadu untuk kese
           a.pdf||"", a.gdrive||"", a.sampel||"", (a.persoalanKajian||[]).join(" | "),
           (a.dapatan||[]).join(" | "), a.ringkasanPenuh||"", (a.kelemahanKajian||[]).join(" | "), (a.cadanganKajian||[]).join(" | "), a.novelty||"",
           (a.gap||[]).join(" | "), a.kaitan||"", a.ayat||"", a.citationAPA||"", (a.petikan||[]).join(" | "), (a.digunakanDalam||[]).join(" | "), a.nota||"",
+          a.prismaStatus||"", a.qualityAppraisal||"",
           JSON.stringify(a)
         ];
       });
@@ -781,7 +786,7 @@ function doGet(e) {
         };
 
         data.forEach(function(r) {
-          var raw = r[44]; // lajur RawJSON (tersembunyi, kolum ke-45)
+          var raw = r[46]; // lajur RawJSON (tersembunyi, kolum ke-47)
           var a = {};
           if (raw) { try { a = JSON.parse(raw); } catch(parseErr) { a = {}; } }
 
@@ -832,6 +837,8 @@ function doGet(e) {
           a.petikan = splitArr(r[41]).length ? splitArr(r[41]) : (a.petikan || []);
           a.digunakanDalam = splitArr(r[42]).length ? splitArr(r[42]) : (a.digunakanDalam || []);
           a.nota = r[43] || a.nota || "";
+          a.prismaStatus = r[44] || a.prismaStatus || "";
+          a.qualityAppraisal = r[45] || a.qualityAppraisal || "";
 
           if (a.kod || a.tajuk) articles.push(a);
         });
@@ -888,6 +895,8 @@ function doGet(e) {
     return `<span class="p-badge ${cls}">${escapeHtml(q)}</span>`;
   }
   const WARNA_LABEL = { hijau: "Sangat Penting (wajib sitasi)", kuning: "Penting", biru: "Sokongan", merah: "Tidak Relevan" };
+  const PRISMA_QUICK_OPTS = ["", "Identified", "Screened", "Eligible", "Included"];
+  const APPRAISAL_QUICK_OPTS = ["", "High", "Moderate", "Low"];
   const DIGUNAKAN_OPTIONS = ["Bab 1","Bab 2","Bab 3","Bab 5","SLR","Artikel Jurnal"];
   function bacaBadge(status){
     const s = status || "Belum";
@@ -1453,7 +1462,7 @@ function doGet(e) {
     const pageList = list.slice(startIdx, startIdx + pageSize);
 
     wrap.innerHTML = `<table class="p-table"><thead><tr>
-      <th></th><th>Kod</th><th>Tajuk</th><th>Penulis (Tahun)</th><th>Negara</th><th>Quartile</th><th>Tema</th><th>PDF</th><th title="Disahkan dengan PDF asal">✓</th><th>RO</th><th>Bab</th><th>Digunakan</th><th>Baca</th><th>⭐</th><th>Kepentingan</th><th></th>
+      <th></th><th>Kod</th><th>Tajuk</th><th>Penulis (Tahun)</th><th>Negara</th><th>Quartile</th><th>Tema</th><th>PDF</th><th title="Disahkan dengan PDF asal">✓</th><th>RO</th><th>Bab</th><th>Digunakan</th><th>Baca</th><th>⭐</th><th>Kepentingan</th><th title="Status PRISMA">PRISMA</th><th title="Quality Appraisal">QA</th><th></th>
     </tr></thead><tbody>${pageList.map(a => {
       const origIndex = articles.indexOf(a);
       const pdfStatus = a.pdf || "none";
@@ -1466,6 +1475,8 @@ function doGet(e) {
         : `<span class="p-used-none">Belum</span>`;
       const warnaCell = a.prioritiWarna ? `<span class="p-dot ${escapeHtml(a.prioritiWarna)}" title="${WARNA_LABEL[a.prioritiWarna]||''}"></span>` : '';
       const bacaCell = bacaBadge(a.statusBacaan);
+      const prismaCell = `<select class="p-inline-select p-prisma-quick" data-idx="${origIndex}">${PRISMA_QUICK_OPTS.map(o=>`<option value="${o}" ${(a.prismaStatus||"")===o?'selected':''}>${o||'-'}</option>`).join('')}</select>`;
+      const appraisalCell = `<select class="p-inline-select p-appraisal-quick" data-idx="${origIndex}">${APPRAISAL_QUICK_OPTS.map(o=>`<option value="${o}" ${(a.qualityAppraisal||"")===o?'selected':''}>${o||'-'}</option>`).join('')}</select>`;
       return `<tr data-idx="${origIndex}">
         <td style="text-align:center">${warnaCell}</td>
         <td class="mono">${escapeHtml(a.kod||'-')}</td>
@@ -1482,9 +1493,26 @@ function doGet(e) {
         <td>${bacaCell}</td>
         <td style="white-space:nowrap;font-size:11px">${priorityStars(a.priority) || '<span class="p-used-none">-</span>'}</td>
         <td>${kepentinganBadge(a.tahapKepentingan)}</td>
+        <td onclick="event.stopPropagation()">${prismaCell}</td>
+        <td onclick="event.stopPropagation()">${appraisalCell}</td>
         <td><button class="p-btn outline small p-edit-btn" data-idx="${origIndex}">Sunting</button> <button class="p-btn danger small p-del-btn" data-idx="${origIndex}">Padam</button></td>
       </tr>`;
     }).join("")}</tbody></table>`;
+
+    $$(".p-prisma-quick", wrap).forEach(sel => {
+      sel.addEventListener("click", e => e.stopPropagation());
+      sel.addEventListener("change", async e => {
+        const idx = parseInt(sel.dataset.idx);
+        if (articles[idx]) { articles[idx].prismaStatus = e.target.value; await saveData(); toast("Status PRISMA dikemas kini."); }
+      });
+    });
+    $$(".p-appraisal-quick", wrap).forEach(sel => {
+      sel.addEventListener("click", e => e.stopPropagation());
+      sel.addEventListener("change", async e => {
+        const idx = parseInt(sel.dataset.idx);
+        if (articles[idx]) { articles[idx].qualityAppraisal = e.target.value; await saveData(); toast("Quality Appraisal dikemas kini."); }
+      });
+    });
 
     if (pager) {
       const endIdx = Math.min(startIdx + pageSize, totalItems);
@@ -1579,7 +1607,9 @@ function doGet(e) {
       ["Tahap Artikel", a.tahapArtikel], ["Tahap Kepentingan", a.tahapKepentingan],
       ["Prioriti Warna", a.prioritiWarna ? `<span class="p-dot ${escapeHtml(a.prioritiWarna)}"></span> ${escapeHtml(WARNA_LABEL[a.prioritiWarna]||'')}` : ""],
       ["Status Bacaan", bacaBadge(a.statusBacaan)],
-      ["Penarafan Artikel", a.priority ? priorityStars(a.priority) : ""], ["Nota", a.nota]
+      ["Penarafan Artikel", a.priority ? priorityStars(a.priority) : ""],
+      ["Status PRISMA", a.prismaStatus], ["Quality Appraisal", a.qualityAppraisal],
+      ["Nota", a.nota]
     ];
     $("#pModalContent").innerHTML = `
       <h3 class="serif">${escapeHtml(a.tajuk||"Artikel")}</h3>
@@ -1628,6 +1658,8 @@ function doGet(e) {
     const peringkatOpts = [{v:"",l:"-"},{v:"Sekolah Rendah",l:"Sekolah Rendah"},{v:"Sekolah Menengah",l:"Sekolah Menengah"},{v:"Pra-Universiti",l:"Pra-Universiti"},{v:"IPT",l:"IPT"},{v:"Umum",l:"Umum"}];
     const tahapBuktiOpts = [{v:"",l:"-"},{v:"Tinggi",l:"Tinggi"},{v:"Sederhana",l:"Sederhana"},{v:"Rendah",l:"Rendah"}];
     const disahkanOpts = [{v:"Tidak",l:"Tidak"},{v:"Ya",l:"Ya — telah disemak dengan PDF asal"}];
+    const prismaOpts = [{v:"",l:"-"},{v:"Identified",l:"Identified"},{v:"Screened",l:"Screened"},{v:"Eligible",l:"Eligible"},{v:"Included",l:"Included"}];
+    const appraisalOpts = [{v:"",l:"-"},{v:"High",l:"High"},{v:"Moderate",l:"Moderate"},{v:"Low",l:"Low"}];
 
     $("#pEditContent").innerHTML = `
       <h3 class="serif">${kod ? "Sunting Artikel" : "Tambah Artikel"}</h3>
@@ -1686,6 +1718,8 @@ function doGet(e) {
         ${fieldRow("Prioriti Warna","efWarna","select",{options:warnaOpts})}
         ${fieldRow("Status Bacaan","efBaca","select",{options:bacaOpts})}
         ${fieldRow("Penarafan Artikel (Kaitan dengan Tesis)","efPriority","select",{options:priorityOpts})}
+        ${fieldRow("Status PRISMA","efPrisma","select",{options:prismaOpts})}
+        ${fieldRow("Quality Appraisal","efAppraisal","select",{options:appraisalOpts})}
         ${fieldRow("Nota","efNota","textarea",{full:true})}
       </div>
       <div class="p-modal-actions">
@@ -1728,6 +1762,7 @@ function doGet(e) {
       $("#efTopik").value = asArray(a.topik).join(", "); $("#efTahapArtikel").value = a.tahapArtikel||"";
       $("#efKepentingan").value = a.tahapKepentingan||""; $("#efWarna").value = a.prioritiWarna||"";
       $("#efBaca").value = a.statusBacaan||"Belum"; $("#efPriority").value = a.priority||""; $("#efNota").value = a.nota||"";
+      $("#efPrisma").value = a.prismaStatus||""; $("#efAppraisal").value = a.qualityAppraisal||"";
     }
 
     $("#pEditCancel").addEventListener("click", closeEditForm);
@@ -1789,7 +1824,8 @@ function doGet(e) {
       babDisokong: asArray($("#efBab").value), ro: asArray($("#efRo").value), topik: asArray($("#efTopik").value),
       tahapArtikel: $("#efTahapArtikel").value, tahapKepentingan: $("#efKepentingan").value,
       prioritiWarna: $("#efWarna").value, statusBacaan: $("#efBaca").value || "Belum",
-      priority: $("#efPriority").value, nota: $("#efNota").value.trim()
+      priority: $("#efPriority").value, nota: $("#efNota").value.trim(),
+      prismaStatus: $("#efPrisma").value, qualityAppraisal: $("#efAppraisal").value
     };
     rec.citationAPA = apaString(rec);
     const idx = editingKod ? articles.findIndex(x => x.kod === editingKod) : -1;
@@ -2107,6 +2143,17 @@ Sila hasilkan draf perenggan sedia untuk saya semak dan sesuaikan.`;
     ["topik","teori","dapatan","gap","babDisokong","ro","petikan","digunakanDalam","kataKunci","persoalanKajian","kelemahanKajian","cadanganKajian"].forEach(k => { if (typeof a[k] === "string") a[k] = asArray(a[k]); });
     if (!a.statusBacaan) a.statusBacaan = "Belum";
     if (!a.disahkan) a.disahkan = "Tidak";
+    if (a.prismaStatus === undefined || a.prismaStatus === null || a.prismaStatus === "") {
+      // Setiap artikel dalam pangkalan data (bukan senarai ditolak/pendua) secara logik
+      // sudah melepasi saringan PRISMA — jadi auto-tanda "Included" jika belum ditanda.
+      a.prismaStatus = "Included";
+    }
+    if (a.qualityAppraisal === undefined || a.qualityAppraisal === null || a.qualityAppraisal === "") {
+      // Anggaran automatik daripada Tahap Bukti (kekuatan metodologi) sedia ada.
+      // Boleh ditindih bila-bila melalui dropdown QA dalam jadual jika tak setuju.
+      const abMap = { "Tinggi": "High", "Sederhana": "Moderate", "Rendah": "Low" };
+      a.qualityAppraisal = abMap[a.tahapBukti] || "";
+    }
     if (a.bilanganSitasi === undefined || a.bilanganSitasi === null || a.bilanganSitasi === "") a.bilanganSitasi = 0;
     else a.bilanganSitasi = parseInt(a.bilanganSitasi) || 0;
     a.citationCount = parseInt(a.citationCount) || 0;
