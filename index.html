@@ -770,11 +770,70 @@ function doGet(e) {
       var lastRow = sheet.getLastRow();
       var lastCol = sheet.getLastColumn();
       if (lastRow > 1) {
-        var raw = sheet.getRange(2, lastCol, lastRow - 1, 1).getValues();
-        raw.forEach(function(r) {
-          if (r[0]) {
-            try { articles.push(JSON.parse(r[0])); } catch(parseErr) {}
-          }
+        var data = sheet.getRange(2, 1, lastRow - 1, lastCol).getValues();
+        var splitArr = function(v) {
+          return String(v || "").split("|").map(function(s) { return s.trim(); }).filter(function(s) { return s; });
+        };
+        var numOr = function(v, def) {
+          if (v === "" || v === null || v === undefined) return def;
+          var n = parseFloat(v);
+          return isNaN(n) ? def : n;
+        };
+
+        data.forEach(function(r) {
+          var raw = r[44]; // lajur RawJSON (tersembunyi, kolum ke-45)
+          var a = {};
+          if (raw) { try { a = JSON.parse(raw); } catch(parseErr) { a = {}; } }
+
+          // Tulis ganti dengan nilai TERUS dari Sheet supaya sebarang edit manual
+          // (cth Link PDF, Nota, Status Bacaan) dikesan bila Muat Turun dari Sheets.
+          // Cell kosong akan kekalkan nilai asal dari RawJSON (elak terhapus tanpa sengaja).
+          a.kod = r[0] || a.kod || "";
+          a.kategori = r[1] || a.kategori || "";
+          a.topik = splitArr(r[2]).length ? splitArr(r[2]) : (a.topik || []);
+          a.ro = splitArr(r[3]).length ? splitArr(r[3]) : (a.ro || []);
+          a.babDisokong = splitArr(r[4]).length ? splitArr(r[4]) : (a.babDisokong || []);
+          a.penulis = r[5] || a.penulis || "";
+          a.tahun = r[6] || a.tahun || "";
+          a.tajuk = r[7] || a.tajuk || "";
+          a.jurnal = r[8] || a.jurnal || "";
+          a.vol = r[9] || a.vol || "";
+          a.doi = r[10] || a.doi || "";
+          a.urlRasmi = r[11] || a.urlRasmi || "";
+          a.negara = r[12] || a.negara || "";
+          a.peringkatPendidikan = r[13] || a.peringkatPendidikan || "";
+          a.jenis = r[14] || a.jenis || "";
+          a.rekaBentukKajian = r[15] || a.rekaBentukKajian || "";
+          a.quartile = r[16] || a.quartile || "";
+          a.kataKunci = splitArr(r[17]).length ? splitArr(r[17]) : (a.kataKunci || []);
+          a.tahapArtikel = r[18] || a.tahapArtikel || "";
+          a.tahapKepentingan = r[19] || a.tahapKepentingan || "";
+          a.prioritiWarna = r[20] || a.prioritiWarna || "";
+          a.statusBacaan = r[21] || a.statusBacaan || "Belum";
+          a.tahapBukti = r[22] || a.tahapBukti || "";
+          a.disahkan = r[23] || a.disahkan || "Tidak";
+          a.bilanganSitasi = numOr(r[24], a.bilanganSitasi || 0);
+          a.halamanPDF = r[25] || a.halamanPDF || "";
+          a.citationCount = numOr(r[26], a.citationCount || 0);
+          a.qualityScore = numOr(r[27], a.qualityScore);
+          a.pdf = r[28] || a.pdf || "";
+          a.gdrive = r[29] || a.gdrive || "";
+          a.sampel = r[30] || a.sampel || "";
+          a.persoalanKajian = splitArr(r[31]).length ? splitArr(r[31]) : (a.persoalanKajian || []);
+          a.dapatan = splitArr(r[32]).length ? splitArr(r[32]) : (a.dapatan || []);
+          a.ringkasanPenuh = r[33] || a.ringkasanPenuh || "";
+          a.kelemahanKajian = splitArr(r[34]).length ? splitArr(r[34]) : (a.kelemahanKajian || []);
+          a.cadanganKajian = splitArr(r[35]).length ? splitArr(r[35]) : (a.cadanganKajian || []);
+          a.novelty = r[36] || a.novelty || "";
+          a.gap = splitArr(r[37]).length ? splitArr(r[37]) : (a.gap || []);
+          a.kaitan = r[38] || a.kaitan || "";
+          a.ayat = r[39] || a.ayat || "";
+          a.citationAPA = r[40] || a.citationAPA || "";
+          a.petikan = splitArr(r[41]).length ? splitArr(r[41]) : (a.petikan || []);
+          a.digunakanDalam = splitArr(r[42]).length ? splitArr(r[42]) : (a.digunakanDalam || []);
+          a.nota = r[43] || a.nota || "";
+
+          if (a.kod || a.tajuk) articles.push(a);
         });
       }
     }
