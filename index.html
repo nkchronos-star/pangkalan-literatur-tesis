@@ -103,6 +103,16 @@ table.p-table tr:hover td{background:var(--paper-alt);cursor:pointer}
 .p-empty{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:13px}
 .p-empty .big{font-size:30px;margin-bottom:8px}
 
+/* Pagination */
+.p-pagination{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.p-pagination .info{font-size:11.5px;color:var(--ink-soft)}
+.p-pagination .pages{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.p-page-btn{min-width:28px;height:28px;padding:0 7px;border:1px solid var(--line);border-radius:4px;background:var(--card);color:var(--ink-soft);font-size:11.5px;font-family:'IBM Plex Mono',monospace;cursor:pointer}
+.p-page-btn:hover:not(:disabled){border-color:var(--maroon);color:var(--maroon)}
+.p-page-btn.active{background:var(--maroon);border-color:var(--maroon);color:#fff;font-weight:700}
+.p-page-btn:disabled{opacity:.35;cursor:not-allowed}
+.p-page-ellipsis{padding:0 4px;color:var(--ink-soft);font-size:11.5px}
+
 /* Modal */
 .p-modal-bg{display:none;position:fixed;inset:0;background:rgba(35,32,27,.55);z-index:999;align-items:center;justify-content:center;padding:20px}
 .p-modal-bg.show{display:flex}
@@ -346,14 +356,23 @@ table.p-matrix td.left{text-align:left}
               <option value="Umum">Umum</option>
             </select>
             <select class="p-select" id="pDbSort">
+              <option value="kod">Kod (A&ndash;Z)</option>
               <option value="">Tiada Susunan Khas</option>
               <option value="quality">Skor Kualiti (Tertinggi Dahulu)</option>
               <option value="priority">Penarafan ⭐ (Tertinggi Dahulu)</option>
               <option value="tahun">Tahun (Terbaru Dahulu)</option>
               <option value="citation">Sitasi Luar (Tertinggi Dahulu)</option>
             </select>
+            <select class="p-select" id="pDbPageSize" title="Bilangan baris setiap muka surat">
+              <option value="10" selected>10 / muka surat</option>
+              <option value="30">30 / muka surat</option>
+              <option value="50">50 / muka surat</option>
+              <option value="100">100 / muka surat</option>
+              <option value="all">Semua</option>
+            </select>
           </div>
           <div id="pDbTableWrap"></div>
+          <div id="pDbPagination"></div>
         </div>
 
         <!-- BAB WRITER -->
@@ -671,7 +690,7 @@ JIKA BERKAITAN: teruskan jana JSON penuh. Ini SATU database bersepadu untuk kese
 
   let articles = [];
   let activeTab = "import";
-  let dbFilter = { search: "", tema: "", ro: "", kepentingan: "", tahap: "", pdf: "", negara: "", quartile: "", used: "", warna: "", baca: "", peringkat: "", sort: "" };
+  let dbFilter = { search: "", tema: "", ro: "", kepentingan: "", tahap: "", pdf: "", negara: "", quartile: "", used: "", warna: "", baca: "", peringkat: "", sort: "kod", page: 1, pageSize: 10 };
   const PDF_ICON = { full: "&#9989;", part: "&#9888;", none: "&#10060;" };
   const PDF_LABEL = { full: "PDF Penuh", part: "PDF Sebahagian", none: "Tiada PDF" };
   let gapFilter = "";
@@ -1356,15 +1375,27 @@ function doGet(e) {
     else if (dbFilter.sort === "priority") list.sort((a,b) => (parseInt(b.priority)||0) - (parseInt(a.priority)||0));
     else if (dbFilter.sort === "tahun") list.sort((a,b) => (parseInt(b.tahun)||0) - (parseInt(a.tahun)||0));
     else if (dbFilter.sort === "citation") list.sort((a,b) => (b.citationCount||0) - (a.citationCount||0));
+    else if (dbFilter.sort === "kod") list.sort((a,b) => (a.kod||"").localeCompare(b.kod||"", undefined, {numeric: true, sensitivity: "base"}));
+
+    const pager = $("#pDbPagination");
 
     if (!list.length) {
-      wrap.innerHTML = `<div class="p-empty"><div class="big">&#128218;</div>Tiada artikel lagi. Pergi ke tab <b>Import AI</b> untuk mula tambah artikel.</div>`;
+      wrap.innerHTML = `<div class="p-empty"><div class="big">&#128218;</div>${articles.length ? 'Tiada artikel sepadan dengan carian/penapis semasa.' : 'Tiada artikel lagi. Pergi ke tab <b>Import AI</b> untuk mula tambah artikel.'}</div>`;
+      if (pager) pager.innerHTML = "";
       return;
     }
 
+    const totalItems = list.length;
+    const pageSize = dbFilter.pageSize === "all" ? totalItems : (parseInt(dbFilter.pageSize) || 50);
+    const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+    if (dbFilter.page > totalPages) dbFilter.page = totalPages;
+    if (dbFilter.page < 1) dbFilter.page = 1;
+    const startIdx = (dbFilter.page - 1) * pageSize;
+    const pageList = list.slice(startIdx, startIdx + pageSize);
+
     wrap.innerHTML = `<table class="p-table"><thead><tr>
       <th></th><th>Kod</th><th>Tajuk</th><th>Penulis (Tahun)</th><th>Negara</th><th>Quartile</th><th>Tema</th><th>PDF</th><th title="Disahkan dengan PDF asal">✓</th><th>RO</th><th>Bab</th><th>Digunakan</th><th>Baca</th><th>⭐</th><th>Kepentingan</th><th></th>
-    </tr></thead><tbody>${list.map(a => {
+    </tr></thead><tbody>${pageList.map(a => {
       const origIndex = articles.indexOf(a);
       const pdfStatus = a.pdf || "none";
       const pdfCell = a.gdrive
@@ -1395,6 +1426,41 @@ function doGet(e) {
         <td><button class="p-btn outline small p-edit-btn" data-idx="${origIndex}">Sunting</button> <button class="p-btn danger small p-del-btn" data-idx="${origIndex}">Padam</button></td>
       </tr>`;
     }).join("")}</tbody></table>`;
+
+    if (pager) {
+      const endIdx = Math.min(startIdx + pageSize, totalItems);
+      const makeBtn = (p, label, opts) => {
+        opts = opts || {};
+        return `<button class="p-page-btn${p === dbFilter.page ? ' active' : ''}" data-page="${p}" ${opts.disabled ? 'disabled' : ''}>${label}</button>`;
+      };
+      let pageBtns = "";
+      if (totalPages <= 7) {
+        for (let p = 1; p <= totalPages; p++) pageBtns += makeBtn(p, p);
+      } else {
+        const cur = dbFilter.page;
+        pageBtns += makeBtn(1, 1);
+        if (cur > 3) pageBtns += `<span class="p-page-ellipsis">&hellip;</span>`;
+        for (let p = Math.max(2, cur - 1); p <= Math.min(totalPages - 1, cur + 1); p++) pageBtns += makeBtn(p, p);
+        if (cur < totalPages - 2) pageBtns += `<span class="p-page-ellipsis">&hellip;</span>`;
+        pageBtns += makeBtn(totalPages, totalPages);
+      }
+      pager.innerHTML = `
+        <div class="info">Menunjukkan ${totalItems ? startIdx + 1 : 0}&ndash;${endIdx} daripada ${totalItems} artikel${totalItems !== articles.length ? ` (ditapis drpd ${articles.length})` : ''}</div>
+        <div class="pages">
+          ${makeBtn(dbFilter.page - 1, '&larr; Sebelum', {disabled: dbFilter.page <= 1})}
+          ${pageBtns}
+          ${makeBtn(dbFilter.page + 1, 'Seterus &rarr;', {disabled: dbFilter.page >= totalPages})}
+        </div>`;
+      $$(".p-page-btn", pager).forEach(btn => {
+        btn.addEventListener("click", () => {
+          const p = parseInt(btn.dataset.page);
+          if (!p || p === dbFilter.page || p < 1 || p > totalPages) return;
+          dbFilter.page = p;
+          renderDatabase();
+          wrap.scrollIntoView({behavior: "smooth", block: "start"});
+        });
+      });
+    }
 
     $$("tr[data-idx]", wrap).forEach(tr => {
       tr.addEventListener("click", (e) => {
@@ -2307,19 +2373,25 @@ Sila hasilkan draf perenggan sedia untuk saya semak dan sesuaikan.`;
     $("#pClearJsonBtn").addEventListener("click", () => { $("#pJsonInput").value = ""; $("#pImportMsg").style.display="none"; });
     $("#pManualAddBtn").addEventListener("click", () => openEditForm(null));
 
-    $("#pDbSearch").addEventListener("input", (e) => { dbFilter.search = e.target.value; renderDatabase(); });
-    $("#pDbTemaFilter").addEventListener("change", (e) => { dbFilter.tema = e.target.value; renderDatabase(); });
-    $("#pDbNegaraFilter").addEventListener("change", (e) => { dbFilter.negara = e.target.value; renderDatabase(); });
-    $("#pDbRoFilter").addEventListener("change", (e) => { dbFilter.ro = e.target.value; renderDatabase(); });
-    $("#pDbKepFilter").addEventListener("change", (e) => { dbFilter.kepentingan = e.target.value; renderDatabase(); });
-    $("#pDbTahapFilter").addEventListener("change", (e) => { dbFilter.tahap = e.target.value; renderDatabase(); });
-    $("#pDbQuartileFilter").addEventListener("change", (e) => { dbFilter.quartile = e.target.value; renderDatabase(); });
-    $("#pDbPdfFilter").addEventListener("change", (e) => { dbFilter.pdf = e.target.value; renderDatabase(); });
-    $("#pDbUsedFilter").addEventListener("change", (e) => { dbFilter.used = e.target.value; renderDatabase(); });
-    $("#pDbWarnaFilter").addEventListener("change", (e) => { dbFilter.warna = e.target.value; renderDatabase(); });
-    $("#pDbBacaFilter").addEventListener("change", (e) => { dbFilter.baca = e.target.value; renderDatabase(); });
-    $("#pDbPeringkatFilter").addEventListener("change", (e) => { dbFilter.peringkat = e.target.value; renderDatabase(); });
-    $("#pDbSort").addEventListener("change", (e) => { dbFilter.sort = e.target.value; renderDatabase(); });
+    let dbSearchDebounce;
+    $("#pDbSearch").addEventListener("input", (e) => {
+      const val = e.target.value;
+      clearTimeout(dbSearchDebounce);
+      dbSearchDebounce = setTimeout(() => { dbFilter.search = val; dbFilter.page = 1; renderDatabase(); }, 180);
+    });
+    $("#pDbTemaFilter").addEventListener("change", (e) => { dbFilter.tema = e.target.value; dbFilter.page = 1; renderDatabase(); });
+    $("#pDbNegaraFilter").addEventListener("change", (e) => { dbFilter.negara = e.target.value; dbFilter.page = 1; renderDatabase(); });
+    $("#pDbRoFilter").addEventListener("change", (e) => { dbFilter.ro = e.target.value; dbFilter.page = 1; renderDatabase(); });
+    $("#pDbKepFilter").addEventListener("change", (e) => { dbFilter.kepentingan = e.target.value; dbFilter.page = 1; renderDatabase(); });
+    $("#pDbTahapFilter").addEventListener("change", (e) => { dbFilter.tahap = e.target.value; dbFilter.page = 1; renderDatabase(); });
+    $("#pDbQuartileFilter").addEventListener("change", (e) => { dbFilter.quartile = e.target.value; dbFilter.page = 1; renderDatabase(); });
+    $("#pDbPdfFilter").addEventListener("change", (e) => { dbFilter.pdf = e.target.value; dbFilter.page = 1; renderDatabase(); });
+    $("#pDbUsedFilter").addEventListener("change", (e) => { dbFilter.used = e.target.value; dbFilter.page = 1; renderDatabase(); });
+    $("#pDbWarnaFilter").addEventListener("change", (e) => { dbFilter.warna = e.target.value; dbFilter.page = 1; renderDatabase(); });
+    $("#pDbBacaFilter").addEventListener("change", (e) => { dbFilter.baca = e.target.value; dbFilter.page = 1; renderDatabase(); });
+    $("#pDbPeringkatFilter").addEventListener("change", (e) => { dbFilter.peringkat = e.target.value; dbFilter.page = 1; renderDatabase(); });
+    $("#pDbSort").addEventListener("change", (e) => { dbFilter.sort = e.target.value; dbFilter.page = 1; renderDatabase(); });
+    $("#pDbPageSize").addEventListener("change", (e) => { dbFilter.pageSize = e.target.value === "all" ? "all" : parseInt(e.target.value); dbFilter.page = 1; renderDatabase(); });
 
     $("#pBwTema").addEventListener("change", renderBabWriter);
     $("#pBwSort").addEventListener("change", renderBabWriter);
